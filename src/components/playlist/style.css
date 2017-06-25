@@ -1,0 +1,105 @@
+.playlist {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.item {
+    box-sizing: border-box;
+    background: #f4b400;
+    color: #000;
+    height: 100%;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+}
+
+.thumbnail-link {
+    display: flex;
+}
+
+.thumbnail {
+    flex: auto;
+    display: flex; /* devnote: hacky, we lost composition of Image styles by applying thumbnail */
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.details {
+    font-weight: 500;
+    display: flex;
+    flex-flow: column;
+}
+
+.title {
+    color: inherit;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.published {
+    line-height: 1;
+    font-size: 14px;
+    margin: 10px 0 15px;
+    opacity: 0.65;
+}
+
+.description {
+    line-height: 1.55;
+    font-weight: 500;
+    font-size: 15px;
+    opacity: 0.8;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.description a {
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 1px solid #111;
+}
+
+
+.item {
+    flex-flow: row;
+}
+
+.details {
+    padding: 20px;
+}
+
+.thumbnail-link {
+    order: -1;
+}
+
+.thumbnail {
+    width: 352px;
+}
+
+/*
+@media (max-width: 767px) {
+
+    .item {
+        flex-flow: column;
+    }
+
+    .details {
+        padding: 10px 10px 0;
+    }
+
+    .thumbnail-link {
+        flex: auto;
+        display: flex;
+    }
+
+    .thumbnail {
+        width: 100%;
+    }
+
+    .description {
+        display: none;
+    }
+}
+*/

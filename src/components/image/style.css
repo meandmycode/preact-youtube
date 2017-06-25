@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+}
+
+.image {
+    flex: auto;
+    background: no-repeat center center / contain;
+    will-change: opacity;
+    transition: opacity 250ms ease-out;
+}
+
+.image[data-state=pending] {
+    opacity: 0;
+}

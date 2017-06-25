@@ -1,0 +1,64 @@
+html, body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    background: #eee;
+    overflow: hidden;
+}
+
+html {
+    font-display: optional;
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+}
+
+.host {
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+}
+
+.header {
+    flex-shrink: 0;
+    text-align: center;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #545454;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 55px;
+    max-width: 1000px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.nav::before {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    background: #f4b400;
+    margin-right: auto;
+}
+
+.knight-rider {
+    display: block;
+    height: 3px;
+    background: cornflowerblue;
+    will-change: opacity;
+    transition: opacity 150ms ease-out;
+}
+
+.knight-rider[hidden] {
+    opacity: 0;
+}
+
+.content {
+    flex: auto;
+    position: relative;
+}
