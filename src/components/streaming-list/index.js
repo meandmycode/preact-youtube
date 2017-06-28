@@ -6,9 +6,14 @@ const STYLE_CONTENT = 'position: absolute;left: 0;width: 100%';
 
 export default class StreamingList extends Component {
 
+    startPage;
+    finishPage;
+    itemsPerTile;
+    tileHeight;
+    buffer;
+
     state = {
         items: [],
-        offset: 0,
     }
 
     /**
@@ -53,7 +58,24 @@ export default class StreamingList extends Component {
         const startPage = Math.floor(y1 / tileHeight);
         const finishPage = Math.floor(y2 / tileHeight);
 
-        this.setState({ startPage, finishPage, itemsPerTile, tileHeight });
+        const hasPendingChanges =
+            this.startPage !== startPage ||
+            this.finishPage !== finishPage ||
+            this.itemsPerTile !== itemsPerTile ||
+            this.tileHeight !== tileHeight;
+
+        this.startPage = startPage;
+        this.finishPage = finishPage;
+        this.itemsPerTile = itemsPerTile;
+        this.tileHeight = tileHeight;
+
+        // we need to rebuild tiles only if the buffer, tile range or tile size has changed
+        // if we have pending changes then trigger a tile rebuild; this should only
+        // happen when resizing, updating tile size, tile factor or when scrolling
+        // over a tile boundary
+        if (hasPendingChanges) {
+            this.updateTiles();
+        }
 
     }
 
@@ -63,27 +85,8 @@ export default class StreamingList extends Component {
      * then the component should update, otherwise it should not; however if changes
      * to the visible range has occurred then async work is started via updateTiles
      */
-    shouldComponentUpdate(_, { buffer, items, startPage, finishPage, itemsPerTile, tileHeight }) {
-
-        if (this.state.items !== items) return true;
-
-        // we need to rebuild tiles only if the buffer, tile range or tile size has changed
-        const pendingChanges =
-            this.state.buffer !== buffer ||
-            this.state.startPage !== startPage ||
-            this.state.finishPage !== finishPage ||
-            this.state.itemsPerTile !== itemsPerTile ||
-            this.state.tileHeight !== tileHeight;
-
-        // if we have pending changes then trigger a tile rebuild; this should only
-        // happen when resizing, updating tile size, tile factor or when scrolling
-        // over a tile boundary
-        if (pendingChanges) {
-            this.updateTiles(buffer, startPage, finishPage, itemsPerTile);
-        }
-
-        return false;
-
+    shouldComponentUpdate(_, { items }) {
+        return this.state.items !== items;
     }
 
     /**
@@ -93,7 +96,9 @@ export default class StreamingList extends Component {
      * taking the next n items we do need and then finally building an array
      * of items from this subset
      */
-    async updateTiles(buffer, startPage, finishPage, itemsPerTile) {
+    async updateTiles() {
+
+        const { buffer, startPage, finishPage, itemsPerTile } = this;
 
         const start = startPage * itemsPerTile;
         const count = (Math.max(finishPage - startPage, 1) * itemsPerTile) + itemsPerTile;
@@ -121,22 +126,19 @@ export default class StreamingList extends Component {
         scrollingContainer.addEventListener('scroll', this.handleScrollOrResize, { passive: true });
         window.addEventListener('resize', this.handleScrollOrResize, { passive: true });
 
-        const buffer = new Buffer(this.props.source);
+        this.buffer = new Buffer(this.props.source);
 
-        this.setState({ buffer });
-        this.handleScrollOrResize();
+        this.handleScrollOrResize(); // todo: review the name of this method
 
     }
 
-    componentWillReceiveProps(newProps) {
+    componentWillReceiveProps({ source }) {
 
-        if (newProps.source === this.props.source) return;
+        if (source === this.props.source) return;
 
-        const buffer = new Buffer(newProps.source);
+        this.buffer = new Buffer(source);
 
-        this.setState({ buffer });
-
-        this.handleScrollOrResize(); // todo: review
+        this.updateTiles();
 
     }
 
