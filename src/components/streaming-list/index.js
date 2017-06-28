@@ -156,7 +156,9 @@ export default class StreamingList extends Component {
     // for 'props', which we then bind to our top level container
 
     // eslint-disable-next-line no-unused-vars
-    render({ source, total, overscan, itemTemplate, itemHeight, itemGutter, ...props }, { buffer, items, startPage, itemsPerTile, tileHeight }) {
+    render({ source, total, overscan, itemTemplate, itemHeight, itemGutter, ...props }, { items }) {
+
+        const { buffer, startPage, itemsPerTile, tileHeight } = this;
 
         const offset = startPage * tileHeight;
         const maximumHeight = buffer == null ? 0 : buffer.pending.length * itemHeight;
