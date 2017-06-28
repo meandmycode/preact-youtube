@@ -18,7 +18,7 @@ const gettyget = (uri, { cancellation, progress } = {}) => new Promise((resolve,
 
     xhr.onload = () => {
 
-        if (cancellation && cancellation.canceled) return reject();
+        if (cancellation.canceled) return reject();
 
         const json = JSON.parse(xhr.responseText);
         const normalized = normalizer.visit(json);
@@ -46,7 +46,7 @@ export default class YoutubeService {
         return join(this.baseUri, path) + serialize({ ...this.baseParameters, ...parameters });
     }
 
-    async getResource(path, parameters, options) {
+    getResource(path, parameters, options) {
 
         const uri = this.getUri(path, parameters);
         return gettyget(uri, options);
