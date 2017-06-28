@@ -16,15 +16,11 @@ defineSupportCode(({ When }) => {
 
         const { driver, baseUri } = this;
 
+        await new Promise(resolve => setTimeout(resolve, 10000));
+
         const playlistUri = `${baseUri}/p/${playlistId}`;
 
         await driver.get(playlistUri);
-
-        // const body = await driver.findElement(By.css('body')).getText();
-
-        // console.log(body);
-
-        await new Promise(resolve => setTimeout(resolve, 50000));
 
     });
 

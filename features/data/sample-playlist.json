@@ -1,0 +1,103 @@
+{
+  "pageInfo": {
+    "totalResults": 6,
+    "resultsPerPage": 6
+  },
+  "items": [{
+    "snippet": {
+      "publishedAt": "1985-03-18T16:20:00.000Z",
+      "title": "Swanky McSwanks",
+      "description": "Probably the best video in the world.",
+      "thumbnails": {
+        "medium": {
+          "url": "https://fake-static-domain/swanky.jpg",
+          "width": 320,
+          "height": 180
+        }
+      }
+    },
+    "contentDetails": {
+      "videoId": "swank"
+    }
+  }, {
+    "snippet": {
+      "publishedAt": "2016-05-29T16:20:00.000Z",
+      "title": "Harambe",
+      "description": "Parental delegation gone wrong.",
+      "thumbnails": {
+        "medium": {
+          "url": "https://fake-static-domain/big-ole-monkey.jpg",
+          "width": 320,
+          "height": 180
+        }
+      }
+    },
+    "contentDetails": {
+      "videoId": "harambe"
+    }
+  }, {
+    "snippet": {
+      "publishedAt": "2016-02-21T16:20:00.000Z",
+      "title": "Damn daniel",
+      "description": "Daniel is back at it again with them white white vans.",
+      "thumbnails": {
+        "medium": {
+          "url": "https://fake-static-domain/white-vans.jpg",
+          "width": 320,
+          "height": 180
+        }
+      }
+    },
+    "contentDetails": {
+      "videoId": "daniel"
+    }
+  }, {
+    "snippet": {
+      "publishedAt": "2016-03-25T16:20:00.000Z",
+      "title": "Sad Ben Affleck",
+      "description": "Hello darkness my old friend, I've come to talk to you again..",
+      "thumbnails": {
+        "medium": {
+          "url": "https://fake-static-domain/mixed-response.jpg",
+          "width": 320,
+          "height": 180
+        }
+      }
+    },
+    "contentDetails": {
+      "videoId": "lolben"
+    }
+  }, {
+    "snippet": {
+      "publishedAt": "2016-07-27T16:20:00.000Z",
+      "title": "Relatable",
+      "description": "...",
+      "thumbnails": {
+        "medium": {
+          "url": "https://fake-static-domain/arthurs-fist.jpg",
+          "width": 320,
+          "height": 180
+        }
+      }
+    },
+    "contentDetails": {
+      "videoId": "arthur"
+    }
+  }, {
+    "snippet": {
+      "publishedAt": "2011-10-23T16:20:00.000Z",
+      "title": "Harold",
+      "description": "When you're writing dank specifications but all your memes are from last year.",
+      "thumbnails": {
+        "medium": {
+          "url": "https://fake-static-domain/hide-the-pain.jpg",
+          "width": 320,
+          "height": 180
+        }
+      }
+    },
+    "contentDetails": {
+      "videoId": "harold"
+    }
+  }]
+}

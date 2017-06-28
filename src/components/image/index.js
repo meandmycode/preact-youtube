@@ -37,11 +37,11 @@ export default class Image extends Component {
         this.update(nextProps);
     }
 
-    render({ src, ...props }, { state }) {
+    render({ ...props }, { state }) {
 
         return (
             <div styleName='container' {...props}>
-                <div styleName='image' data-state={state} style={`background-image: url(${src})`} />
+                <div styleName='image' data-state={state} style={`background-image: url(${props.src})`} />
             </div>
         );
     }

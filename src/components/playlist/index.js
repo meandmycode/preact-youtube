@@ -12,14 +12,14 @@ const formatDate = date => date.toLocaleString(undefined, { month: 'short', day:
 const getPageSize = visibleItems => visibleItems * 4;
 
 export const SummaryVideo = ({ video }) => (
-    <div styleName='item'>
+    <div styleName='item' component='video'>
         <div styleName='details'>
-            <Link styleName='title' href={`/v/${video.contentDetails.videoId}`}>{video.snippet.title}</Link>
-            <div styleName='published'>Published on {formatDate(video.snippet.publishedAt)}</div>
-            <RichText styleName='description' text={video.snippet.description} />
+            <Link styleName='title' part='title' href={`/v/${video.contentDetails.videoId}`}>{video.snippet.title}</Link>
+            <div styleName='published' part='published'>Published on {formatDate(video.snippet.publishedAt)}</div>
+            <RichText styleName='description' part='description' text={video.snippet.description} />
         </div>
         <Link styleName='thumbnail-link' href={`/v/${video.contentDetails.videoId}`}>
-            <Image styleName='thumbnail' src={video.snippet.thumbnails ? video.snippet.thumbnails.medium.url : null} />
+            <Image styleName='thumbnail' part='thumbnail' src={video.snippet.thumbnails ? video.snippet.thumbnails.medium.url : null} />
         </Link>
     </div>
 );

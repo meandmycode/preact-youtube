@@ -1,3 +1,4 @@
+import path from 'path';
 import { defineSupportCode } from 'cucumber';
 
 defineSupportCode(({ Given }) => {
@@ -8,14 +9,20 @@ defineSupportCode(({ Given }) => {
 
         proxyServer.use((req, res, next) => {
 
-            if (req.hostname === 'www.googleapis.com' && req.path.startsWith('/youtube/v3')) {
+            if (req.hostname === 'www.googleapis.com' &&
+                req.path === '/youtube/v3/playlistItems' &&
+                req.query.playlistId === playlistId) {
 
+                res.append('Access-Control-Allow-Origin', '*');
+                res.sendFile(path.resolve(`features/data/${jsonPath}`));
 
-            }
+            } else if (req.hostname === 'fake-static-domain') {
+
+                res.sendFile(path.resolve(`features/data/${req.path}`));
+
+            } else next();
 
         });
-
-        // console.log('lul', jsonPath, playlistId, this.proxyServer);
 
     });
 

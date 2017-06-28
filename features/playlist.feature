@@ -4,20 +4,19 @@ Feature: Playlist
     So that I can win at social media
 
     Background:
-        Given a youtube playlist "samples/playlist.json" exists as "sample-playlist" from the api
-    #     And I am navigate to "/p/sample-playlist"
+        Given a youtube playlist "sample-playlist.json" exists as "sample-playlist" from the api
 
     Scenario: On desktop I can view some swenk swenk youtube playlist
         When I have a tablet screen size
         And I navigate to the playlist "sample-playlist"
-    #     Then I see a list of videos:
-    #     | id      | title           | published    | thumbnail                  | summary                                                                        |
-    #     | swank   | Swanky McSwanks | Mar 18, 1985 | samples/swanky.png         | Probably the best video in the world.                                          |
-    #     | harambe | Harambe         | May 29, 2016 | samples/big-ole-monkey.png | Parental delegation gone wrong.                                                |
-    #     | daniel  | Damn daniel     | Feb 21, 2016 | samples/white-vans.png     | Daniel is back at it again with them white white vans.                         |
-    #     | lolben  | Sad Ben Affleck | Mar 25, 2016 | samples/mixed-response.png | Hello darkness my old friend, I've come to talk to you again..                 |
-    #     | arthur  | Relatable       | Jul 27, 2016 | samples/arthurs-fist.png   | ...                                                                            |
-    #     | harold  | Harold          | Oct 23, 2011 | samples/hide-the-pain.png  | When you're writing dank specifications but all your memes are from last year. |
+        Then I see a list of videos:
+        | title           | published    | thumbnail                  | summary                                                                        |
+        | Swanky McSwanks | Mar 18 1985 | swanky.jpg         | Probably the best video in the world.                                          |
+        | Harambe         | May 29 2016 | big-ole-monkey.jpg | Parental delegation gone wrong.                                                |
+        | Damn daniel     | Feb 21 2016 | white-vans.jpg     | Daniel is back at it again with them white white vans.                         |
+        | Sad Ben Affleck | Mar 25 2016 | mixed-response.jpg | Hello darkness my old friend, I've come to talk to you again..                 |
+        | Relatable       | Jul 27 2016 | arthurs-fist.jpg   | ...                                                                            |
+        | Harold          | Oct 23 2011 | hide-the-pain.jpg  | When you're writing dank specifications but all your memes are from last year. |
 
     # Scenario: On desktop I can click the title of a video to navigate to the detail view
     #     When I have a desktop screen size
