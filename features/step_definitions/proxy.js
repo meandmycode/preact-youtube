@@ -6,9 +6,12 @@ defineSupportCode(({ Given }) => {
 
         const { proxyServer } = this;
 
-        proxyServer.on('proxyReq', (proxyRequest, req, res, options) => {
+        proxyServer.use((req, res, next) => {
 
-            console.log('PROXY LOL, ');
+            if (req.hostname === 'www.googleapis.com' && req.path.startsWith('/youtube/v3')) {
+
+
+            }
 
         });
 

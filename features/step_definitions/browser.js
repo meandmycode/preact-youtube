@@ -1,5 +1,5 @@
 import { defineSupportCode } from 'cucumber';
-import { By, util } from 'selenium-webdriver';
+// import { By, util } from 'selenium-webdriver';
 
 defineSupportCode(({ When }) => {
 
@@ -12,23 +12,19 @@ defineSupportCode(({ When }) => {
 
     });
 
-    When('I navigate to the playlist {stringInDoubleQuotes}', function(playlistId) {
+    When('I navigate to the playlist {stringInDoubleQuotes}', { timeout: -1 }, async function(playlistId) {
 
         const { driver, baseUri } = this;
 
         const playlistUri = `${baseUri}/p/${playlistId}`;
 
-        console.log(playlistId)
+        await driver.get(playlistUri);
 
-        driver.get(playlistUri);
+        // const body = await driver.findElement(By.css('body')).getText();
 
-        const body = driver.findElement(By.css('body'));
+        // console.log(body);
 
-        return body.then(body => {
-
-            console.log(body);
-
-        });
+        await new Promise(resolve => setTimeout(resolve, 50000));
 
     });
 
