@@ -17,6 +17,9 @@
     order: -1;
     background: #000;
     height: 562px;
+    max-height: 562px;
+    height: 100%;
+    height: 70vh;
 }
 
 .video {
