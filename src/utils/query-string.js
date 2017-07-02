@@ -9,3 +9,21 @@ export const serialize = obj => {
     return '?' + pairs.join('&');
 
 };
+
+export const deserialize = str => {
+
+    const pairs = str.slice(1).split('&');
+
+    const obj = pairs.reduce((map, pair) => {
+
+        const [key, value] = pair.split('=').map(decodeURIComponent);
+
+        map[key] = value;
+
+        return map;
+
+    }, {});
+
+    return obj;
+
+}

@@ -4,23 +4,32 @@ import { skip, take, toArray, Buffer } from '../../utils/iteration-utils';
 const STYLE_INNER = 'position: relative;overflow-y: scroll;height: 100%';
 const STYLE_CONTENT = 'position: absolute;left: 0;width: 100%';
 
-export default class StreamingList extends Component {
+function getHeightForCount(itemHeight, itemGutter, count) {
 
-    startPage;
-    finishPage;
-    itemsPerTile;
-    tileHeight;
-    buffer;
+    if (count === 0) return 0;
+
+    return count * (itemHeight + itemGutter);
+
+}
+
+export default class StreamingList extends Component {
 
     state = {
         items: [],
+        skipCount: 0,
     }
 
     /**
      * Handles callbacks from scroll and resize events, we throttle these high frequency
      * events via animation frame callbacks; we enqueue work to update the visible range.
      */
-    handleScrollOrResize = () => requestAnimationFrame(this.updateVisibleRange);
+    handleResize = () => requestAnimationFrame(this.updateVisibleRange);
+    handleScroll = () => requestAnimationFrame(this.handleResizeInvalidated);
+
+    handleResizeInvalidated = () => {
+        const position = this.base.firstElementChild.scrollTop;
+        this.props.onPositionChange({ position });
+    }
 
     /**
      * Handles renderable frequency callbacks from high frequency source updates and
@@ -30,82 +39,31 @@ export default class StreamingList extends Component {
      * state change is significant (i.e., it would change the items being rendered)
      * then we trigger async work to build this item list via shouldComponentUpdate.
      */
-    updateVisibleRange = () => {
+    updateVisibleRange = async isSourceUpdating => {
 
-        const { itemHeight, itemGutter, pageSizer } = this.props;
-
-        function getHeightForCount(count) {
-
-            if (count === 0) return 0;
-
-            const itemsHeight = count * itemHeight;
-            const gutters = (count - 1) * itemGutter;
-
-            return itemsHeight + gutters;
-
-        }
+        const { itemHeight, itemGutter, position = 0 } = this.props;
 
         const height = this.base.offsetHeight;
-        const y1 = this.base.firstElementChild.scrollTop;
+        const itemSize = itemHeight + itemGutter;
 
-        const visibleItems = Math.ceil(height / (itemHeight + itemGutter));
-        const itemsPerTile = pageSizer(visibleItems);
-        const tileHeight = getHeightForCount(itemsPerTile);
+        const overscan = height * 2;
+        const y1overscan = Math.max(position - height, 0);
 
-        const y2 = y1 + height;
-
-        // calculate the tile page numbers that match the top and bottom points
-        const startPage = Math.floor(y1 / tileHeight);
-        const finishPage = Math.floor(y2 / tileHeight);
+        const skipCount = Math.floor(y1overscan / itemSize);
+        const takeCount = Math.ceil((height + (overscan * 2)) / itemSize);
 
         const hasPendingChanges =
-            this.startPage !== startPage ||
-            this.finishPage !== finishPage ||
-            this.itemsPerTile !== itemsPerTile ||
-            this.tileHeight !== tileHeight;
+            this.state.skipCount !== skipCount ||
+            this.state.takeCount !== takeCount ||
+            this.state.height !== height;
 
-        this.startPage = startPage;
-        this.finishPage = finishPage;
-        this.itemsPerTile = itemsPerTile;
-        this.tileHeight = tileHeight;
+        if (isSourceUpdating || hasPendingChanges) {
 
-        // we need to rebuild tiles only if the buffer, tile range or tile size has changed
-        // if we have pending changes then trigger a tile rebuild; this should only
-        // happen when resizing, updating tile size, tile factor or when scrolling
-        // over a tile boundary
-        if (hasPendingChanges) {
-            this.updateTiles();
+            const items = await toArray(take(skip(this.state.buffer, skipCount), takeCount));
+
+            this.setState({ items, skipCount, takeCount, height });
+
         }
-
-    }
-
-    /**
-     * Handles triggering a tile update if significant changes have occured to the
-     * visible items, if the current state items do not match the incoming state items
-     * then the component should update, otherwise it should not; however if changes
-     * to the visible range has occurred then async work is started via updateTiles
-     */
-    shouldComponentUpdate(_, { items }) {
-        return this.state.items !== items;
-    }
-
-    /**
-     * Handles building an array of visible items from source data and a given
-     * starting and finishing page; we do this by lazily iterating over the
-     * async data source, first skipping n amount of items we don't need,
-     * taking the next n items we do need and then finally building an array
-     * of items from this subset
-     */
-    async updateTiles() {
-
-        const { buffer, startPage, finishPage, itemsPerTile } = this;
-
-        const start = startPage * itemsPerTile;
-        const count = (Math.max(finishPage - startPage, 1) * itemsPerTile) + itemsPerTile;
-
-        const items = await toArray(take(skip(buffer, start), count));
-
-        this.setState({ items });
 
     }
 
@@ -118,60 +76,76 @@ export default class StreamingList extends Component {
      * all items that it sees being iterated from a given source iterable and then
      * re-iterating them for subsequent iterations
      */
-    componentDidMount() {
+    async componentDidMount() {
 
         const scrollingContainer = this.base.querySelector('[data-scrolling-container]');
         const window = this.base.ownerDocument.defaultView;
 
-        scrollingContainer.addEventListener('scroll', this.handleScrollOrResize, { passive: true });
-        window.addEventListener('resize', this.handleScrollOrResize, { passive: true });
+        scrollingContainer.addEventListener('scroll', this.handleScroll, { passive: true });
+        window.addEventListener('resize', this.handleResize, { passive: true });
 
-        this.buffer = new Buffer(this.props.source);
+        const buffer = new Buffer(this.props.source);
+        this.setState({ buffer });
 
-        this.handleScrollOrResize(); // todo: review the name of this method
+        await this.updateVisibleRange();
+
+        this.forceUpdate(() => {
+            this.base.firstElementChild.scrollTop = this.props.position;
+        });
+
+    }
+
+    componentWillReceiveProps({ source, position }) {
+
+        const isSourceUpdating = source !== this.props.source;
+
+        if (!isSourceUpdating && position === this.props.position) return;
+
+        if (isSourceUpdating) {
+            const buffer = new Buffer(this.props.source);
+            this.setState({ buffer });
+        }
+
+        this.updateVisibleRange(isSourceUpdating);
 
     }
 
-    componentWillReceiveProps({ source }) {
-
-        if (source === this.props.source) return;
-
-        this.buffer = new Buffer(source);
-
-        this.updateTiles();
-
-    }
+    /**
+     * Handles triggering a tile update if significant changes have occured to the
+     * visible items, if the current state items do not match the incoming state items
+     * then the component should update, otherwise it should not; however if changes
+     * to the visible range has occurred then async work is started via updateTiles
+     */
+    shouldComponentUpdate = ({ itemTemplate }, { items }) =>
+        this.props.itemTemplate !== itemTemplate ||
+        this.state.items !== items;
 
     componentWillUnmount() {
 
         const scrollingContainer = this.base.querySelector('[data-scrolling-container]');
         const window = this.base.ownerDocument.defaultView;
 
-        scrollingContainer.removeEventListener('scroll', this.handleScrollOrResize);
-        window.removeEventListener('resize', this.handleScrollOrResize);
+        scrollingContainer.removeEventListener('scroll', this.handleScroll);
+        window.removeEventListener('resize', this.handleResize);
 
     }
 
     // devnote, we bring our known props into scope so they are excluded
     // for 'props', which we then bind to our top level container
-
     // eslint-disable-next-line no-unused-vars
-    render({ source, total, overscan, itemTemplate, itemHeight, itemGutter, ...props }, { items }) {
+    render({ source, position, total, itemTemplate, itemHeight, itemGutter, ...props }, { buffer, items, skipCount, takeCount }) {
 
-        const { buffer, startPage, itemsPerTile, tileHeight } = this;
-
-        const offset = startPage * tileHeight;
-        const maximumHeight = buffer == null ? 0 : buffer.pending.length * itemHeight;
-
-        const startIndex = startPage * itemsPerTile;
+        const offset = getHeightForCount(itemHeight, itemGutter, skipCount);
+        const maximumHeight =  getHeightForCount(itemHeight, itemGutter, buffer ? Math.min(buffer.pending.length, total) : 0);
 
         return (
             <div {...props}>
-                <div data-scrolling-container style={`${STYLE_INNER}`}>
-                    <div style={`${STYLE_CONTENT};transform: translateY(${offset}px);min-height: ${maximumHeight - offset}px`}>
+                <div data-scrolling-container={''} style={`${STYLE_INNER}`}>
+                    <div style={`${STYLE_CONTENT};height: ${maximumHeight + itemGutter}px`}>
+                        <div style={`height: ${offset}px`} />
                         {items.map((item, i) => (
-                            <div key={startIndex + i} style={`height: ${itemHeight}px;margin-top: ${itemGutter}px`}>
-                                {itemTemplate(item, startIndex + i)}
+                            <div key={skipCount + i} style={`height: ${itemHeight}px;margin-top: ${itemGutter}px`}>
+                                {itemTemplate(item)}
                             </div>
                         ))}
                     </div>

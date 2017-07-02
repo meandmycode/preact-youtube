@@ -82,7 +82,13 @@ export default class YoutubeService {
         const items = this.getPlaylistItemsIterator(page,
             pageToken => this.getPlaylist(playlistId, { ...parameters, pageToken }, options));
 
-        return [items, total];
+        const playlist = {
+            playlistId,
+            total,
+            items,
+        };
+
+        return playlist;
 
     }
 
@@ -100,7 +106,7 @@ export class CachingYoutubeService extends YoutubeService {
 
     async getPlaylist(playlistId, parameters, options) {
 
-        const playlistUri = this.getUri('/playlistItems', parameters);
+        const playlistUri = this.getUri('/playlistItems', { ...parameters, playlistId });
 
         const cached = this.playlists[playlistUri];
 

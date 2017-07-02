@@ -1,15 +1,14 @@
-import { h, options, Component } from 'preact';
-import { Router } from 'preact-router';
+import { h, Component } from 'preact';
 
 import { CachingYoutubeService } from '../../services/youtube';
 
+import Router from '../../components/router';
 import Shell from '../../components/shell';
 import Playlist from '../playlist';
 import Video from '../video';
 
-options.syncComponentUpdates = false;
-
 const youtubeService = new CachingYoutubeService('__API_KEY_HERE__');
+const defaultPlaylistId = 'PLSi28iDfECJPJYFA4wjlF5KUucFvc0qbQ';
 
 export default class App extends Component {
 
@@ -40,8 +39,10 @@ export default class App extends Component {
         return (
             <Shell busy={busy}>
                 <Router>
-                    <Playlist path="/p/:playlistId" youtubeService={youtubeService} onProgress={this.handleProgress} />
-                    <Video path="/v/:videoId" youtubeService={youtubeService} onProgress={this.handleProgress} />
+                    <Playlist path='/p/:playlistId' youtubeService={youtubeService} onProgress={this.handleProgress} />
+                    <Video path='/v/:videoId' youtubeService={youtubeService} onProgress={this.handleProgress} />
+                    <Playlist path='/baby-legs'  youtubeService={youtubeService} onProgress={this.handleProgress} playlistId='PLNu47mcqeyiATtjW5pIRWlpXBu4pUezdP' />
+                    <Playlist default youtubeService={youtubeService} onProgress={this.handleProgress} playlistId={defaultPlaylistId} />
                 </Router>
             </Shell>
         );

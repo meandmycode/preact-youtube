@@ -12,19 +12,15 @@
     color: #000;
     height: 100%;
     max-width: 1000px;
+    width: calc(100% - 40px); /* devnote: this is side padding, this is often done with margins, but we're already using them for horizontal alignment */
     margin-left: auto;
     margin-right: auto;
     display: flex;
-}
-
-.thumbnail-link {
-    display: flex;
+    position: relative; /* devnote: fixes an edge rendering bug by forcing composition */
 }
 
 .thumbnail {
-    flex: auto;
-    display: flex; /* devnote: hacky, we lost composition of Image styles by applying thumbnail */
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.1) no-repeat center center / cover;
 }
 
 .details {
@@ -42,17 +38,19 @@
 .published {
     line-height: 1;
     font-size: 14px;
-    margin: 10px 0 15px;
+    margin-top: 5px;
     opacity: 0.65;
 }
 
 .description {
     line-height: 1.55;
     font-weight: 500;
-    font-size: 15px;
+    font-size: 14px;
     opacity: 0.8;
+    margin-top: 15px;
     overflow: hidden;
     text-overflow: ellipsis;
+    word-break: break-word;
 }
 
 .description a {
@@ -61,45 +59,31 @@
     border-bottom: 1px solid #111;
 }
 
-
-.item {
-    flex-flow: row;
+/* mobile specific layouts */
+.item[mobile] {
+    flex-flow: column;
 }
 
-.details {
+.item[mobile] .description {
+    display: none;
+}
+
+.item[mobile] .thumbnail {
+    flex: auto;
+}
+
+.item[mobile] .details {
+    padding: 10px;
+}
+
+/* non-mobile specific layouts */
+.item:not([mobile]) .thumbnail {
+    order: -1;
+    flex: 50% 0 0;
+    display: flex;
+    max-width: 352px;
+}
+
+.item:not([mobile]) .details {
     padding: 20px;
 }
-
-.thumbnail-link {
-    order: -1;
-}
-
-.thumbnail {
-    width: 352px;
-}
-
-/*
-@media (max-width: 767px) {
-
-    .item {
-        flex-flow: column;
-    }
-
-    .details {
-        padding: 10px 10px 0;
-    }
-
-    .thumbnail-link {
-        flex: auto;
-        display: flex;
-    }
-
-    .thumbnail {
-        width: 100%;
-    }
-
-    .description {
-        display: none;
-    }
-}
-*/

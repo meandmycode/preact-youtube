@@ -1,38 +1,75 @@
-import { h } from 'preact';
+import { h, Component } from 'preact';
 import { Link } from 'preact-router/match';
 
+import { shortDateFormatter } from '../../utils/formatting';
+import { getVideoUrl, getPlaylistUrl, createReferrerUrl } from '../../utils/routing';
+
+import MediaQuery from '../media-query';
 import StreamingList from '../streaming-list';
 import RichText from '../rich-text';
-import Image from '../image';
 
 import './style.css';
 
-const formatDate = date => date.toLocaleString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+const getItemUrl = (playlist, video) => createReferrerUrl(getVideoUrl(video), getPlaylistUrl(playlist));
+const getVideoThumbnail = (video, matches) => video.snippet.thumbnails ? video.snippet.thumbnails[matches ? 'medium' : 'high'].url : null;
 
-const getPageSize = visibleItems => visibleItems * 4;
+class Playlist extends Component {
 
-export const SummaryVideo = ({ video }) => (
-    <div styleName='item' component='video'>
-        <div styleName='details'>
-            <Link styleName='title' part='title' href={`/v/${video.contentDetails.videoId}`}>{video.snippet.title}</Link>
-            <div styleName='published' part='published'>Published on {formatDate(video.snippet.publishedAt)}</div>
-            <RichText styleName='description' part='description' text={video.snippet.description} />
-        </div>
-        <Link styleName='thumbnail-link' href={`/v/${video.contentDetails.videoId}`}>
-            <Image styleName='thumbnail' part='thumbnail' src={video.snippet.thumbnails ? video.snippet.thumbnails.medium.url : null} />
-        </Link>
-    </div>
-);
+    update({ playlist, matches }) {
 
-const itemCreator = video => <SummaryVideo video={video} />;
+        const itemTemplate = video => (
+            <div styleName='item' mobile={matches ? '' : null} component='video'>
+                <div styleName='details'>
+                    <Link styleName='title' part='title' href={getItemUrl(playlist, video)}>{video.snippet.title}</Link>
+                    <div styleName='published' part='published'>Published on {shortDateFormatter.format(video.snippet.publishedAt)}</div>
+                    <RichText styleName='description' part='description' text={video.snippet.description} />
+                </div>
+                <Link styleName='thumbnail'
+                    part='thumbnail'
+                    title={video.snippet.title}
+                    href={getItemUrl(playlist, video)}
+                    style={`background-image: url(${getVideoThumbnail(video, matches)})`}
+                />
+            </div>
+        );
 
-export default ({ videos }) => (
-    <StreamingList
-        styleName='playlist'
-        source={videos}
-        pageSizer={getPageSize}
-        itemTemplate={itemCreator}
-        itemHeight={198}
-        itemGutter={20}
-    />
+        const itemHeight = matches ? 300 : 198;
+
+        this.setState({ itemTemplate, itemHeight });
+
+    }
+
+    componentWillMount() {
+        this.update(this.props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.playlist === this.props.playlist && nextProps.matches === this.props.matches) return;
+        this.update(nextProps);
+    }
+
+    shouldComponentUpdate = ({ position }, { itemTemplate, itemHeight }) =>
+        this.props.position !== position ||
+        this.state.itemTemplate !== itemTemplate ||
+        this.state.itemHeight !== itemHeight;
+
+    render = ({ playlist, position, onPositionChange }, { itemTemplate, itemHeight }) => (
+        <StreamingList
+            styleName='playlist'
+            component='playlist'
+            source={playlist.items}
+            total={playlist.total}
+            position={position}
+            itemTemplate={itemTemplate}
+            itemHeight={itemHeight}
+            itemGutter={20}
+            onPositionChange={onPositionChange}
+        />
+    );
+}
+
+export default props => (
+    <MediaQuery query='(max-device-width: 480px)'>
+        <Playlist {...props} />
+    </MediaQuery>
 );

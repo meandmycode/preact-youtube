@@ -38,7 +38,7 @@ export default class VideoView extends Component {
     }
 
     render(_, { video }) {
-        return video == null ? null : <Video video={video} />;
+        return video ? <Video video={video} /> : null;
     }
 
 }

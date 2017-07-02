@@ -10,7 +10,7 @@ export default class PlaylistView extends Component {
         const progress = onProgress;
         const [cancellation, cancellor] = Cancellation.create();
 
-        const [videos] = await youtubeService.getPlaylistItems(playlistId, {
+        const playlist = await youtubeService.getPlaylistItems(playlistId, {
             maxResults: 50,
             part: 'snippet,contentDetails',
         }, {
@@ -18,7 +18,7 @@ export default class PlaylistView extends Component {
             cancellation,
         });
 
-        this.setState({ videos, cancellor });
+        this.setState({ playlist, cancellor });
 
     }
 
@@ -32,15 +32,21 @@ export default class PlaylistView extends Component {
     }
 
     componentWillUnmount() {
-
         const { cancellor } = this.state;
-
         if (cancellor) cancellor();
-
     }
 
-    render(_, { videos }) {
-        return <Playlist videos={videos} />;
+    render({ routeState, onRouteStateChange }, { playlist }) {
+
+        if (playlist == null) return;
+
+        return (
+            <Playlist
+                playlist={playlist}
+                position={routeState ? routeState.position : undefined}
+                onPositionChange={onRouteStateChange}
+            />
+        );
     }
 
 }
