@@ -1,69 +1,22 @@
 import { defineSupportCode } from 'cucumber';
-import { By } from 'selenium-webdriver';
+import { eventually } from '../support/expectly';
+import { ComponentView } from '../support/dom-components';
 
-const byComponent = name => By.css(`:not([component=${name}]) [component=${name}]`);
+import { find } from '../support/async';
 
-async function reduce(source, reducer, seed) {
+async function getVideoComponents(driver) {
 
-    let last = seed;
-    let i = 0;
+    const view = new ComponentView(driver);
+    const videos = (await view.many('video')).map(videoComponent => videoComponent.parts());
 
-    for (const item of source) {
-        last = await reducer(last, item, i++);
-    }
+    return await Promise.all(videos);
 
-    return last;
-
-}
-
-class ComponentView {
-
-    constructor(context) {
-        this.context = context;
-    }
-
-    async parts() {
-
-        const elements = await this.context.findElements(By.css(':not([component]) [part]'));
-
-        const hash = await reduce(elements, async (hash, element) => {
-
-            const key = await element.getAttribute('part');
-            hash[key] = new PartView(element);
-
-            return hash;
-
-        }, {});
-
-        return hash;
-
-    }
-
-    async one(name) {
-
-        const element = await this.context.findElement(byComponent(name));
-        return new ComponentView(element);
-
-    }
-
-    async many(name) {
-
-        const elements = await this.context.findElements(byComponent(name));
-        const components = elements.map(element => new ComponentView(element));
-
-        return components;
-
-    }
-
-}
-
-class PartView extends ComponentView {
 }
 
 async function getVideosViaDOM(driver) {
 
     const view = new ComponentView(driver);
-    const videoComponents = await Promise.all(await view.many('video'));
+    const videoComponents = await view.many('video');
 
     const descriptors = videoComponents.map(async videoComponent => {
 
@@ -87,17 +40,99 @@ async function getVideosViaDOM(driver) {
 
 }
 
-defineSupportCode(({ When }) => {
+async function getPlaylistComponent(driver) {
 
-    When('I see a list of videos:', async function(videos) {
+    const view = new ComponentView(driver);
+
+    const playlist = await view.one('playlist');
+
+    const scrollingContainer = await playlist.queryOne('[data-scrolling-container]');
+
+    return {
+        scrollingContainer,
+    };
+
+}
+
+const getExpectationsFromSummaries = summaries => summaries.map(({ thumbnail: filename, published: publishDate, ...etc }) => {
+
+    const published = `Published on ${publishDate}`;
+    const thumbnail = `https://fake-static-domain/${filename}`;
+
+    return { published, thumbnail, ...etc };
+
+});
+
+defineSupportCode(({ Then, When }) => {
+
+    Then('I see a list of videos:', eventually(async function(videos) {
 
         const { driver } = this;
 
-        const expected = videos.hashes();
+        const expected = getExpectationsFromSummaries(videos.hashes());
+
         const actual = await getVideosViaDOM(driver);
 
-        actual.should.equal(expected);
+        actual.should.eql(expected);
 
-    });
+    }));
+
+    When('I click on the video title {stringInDoubleQuotes}', eventually(async function(videoName) {
+
+        const { driver } = this;
+
+        const videos = await getVideoComponents(driver);
+
+        const video = await find(videos, async video => {
+
+            const title = await video.title.context.getText();
+
+            return title.trim() === videoName;
+
+        });
+
+        await video.title.context.click();
+
+    }));
+
+    When('I click on the video thumbnail with the title {stringInDoubleQuotes}', eventually(async function(videoName) {
+
+        const { driver } = this;
+
+        const videos = await getVideoComponents(driver);
+
+        const video = await find(videos, async video => {
+
+            const thumbnail = await video.thumbnail.context.getAttribute('title');
+
+            return thumbnail.trim() === videoName;
+
+        });
+
+        await video.thumbnail.context.click();
+
+    }));
+
+    When('I scroll the playlist by {int}px', eventually(async function(top) {
+
+        const { driver } = this;
+
+        const playlist = await getPlaylistComponent(driver);
+
+        await driver.executeScript('arguments[0].scrollTop = arguments[1]', playlist.scrollingContainer, top);
+
+    }));
+
+    Then('I see the playlist scroll position is {int}px', eventually(async function(top) {
+
+        const { driver } = this;
+
+        const playlist = await getPlaylistComponent(driver);
+
+        const actual = await driver.executeScript('return arguments[0].scrollTop', playlist.scrollingContainer);
+
+        actual.should.equal(top);
+
+    }));
 
 });

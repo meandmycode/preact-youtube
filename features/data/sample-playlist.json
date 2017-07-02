@@ -10,9 +10,10 @@
       "description": "Probably the best video in the world.",
       "thumbnails": {
         "medium": {
-          "url": "https://fake-static-domain/swanky.jpg",
-          "width": 320,
-          "height": 180
+          "url": "https://fake-static-domain/sm-swanky.jpg"
+        },
+        "high": {
+          "url": "https://fake-static-domain/swanky.jpg"
         }
       }
     },
@@ -26,9 +27,10 @@
       "description": "Parental delegation gone wrong.",
       "thumbnails": {
         "medium": {
-          "url": "https://fake-static-domain/big-ole-monkey.jpg",
-          "width": 320,
-          "height": 180
+          "url": "https://fake-static-domain/sm-big-ole-monkey.jpg"
+        },
+        "high": {
+          "url": "https://fake-static-domain/big-ole-monkey.jpg"
         }
       }
     },
@@ -42,9 +44,10 @@
       "description": "Daniel is back at it again with them white white vans.",
       "thumbnails": {
         "medium": {
-          "url": "https://fake-static-domain/white-vans.jpg",
-          "width": 320,
-          "height": 180
+          "url": "https://fake-static-domain/sm-white-vans.jpg"
+        },
+        "high": {
+          "url": "https://fake-static-domain/white-vans.jpg"
         }
       }
     },
@@ -58,9 +61,10 @@
       "description": "Hello darkness my old friend, I've come to talk to you again..",
       "thumbnails": {
         "medium": {
-          "url": "https://fake-static-domain/mixed-response.jpg",
-          "width": 320,
-          "height": 180
+          "url": "https://fake-static-domain/sm-mixed-response.jpg"
+        },
+        "high": {
+          "url": "https://fake-static-domain/mixed-response.jpg"
         }
       }
     },
@@ -74,9 +78,10 @@
       "description": "...",
       "thumbnails": {
         "medium": {
-          "url": "https://fake-static-domain/arthurs-fist.jpg",
-          "width": 320,
-          "height": 180
+          "url": "https://fake-static-domain/sm-arthurs-fist.jpg"
+        },
+        "high": {
+          "url": "https://fake-static-domain/arthurs-fist.jpg"
         }
       }
     },
@@ -90,9 +95,10 @@
       "description": "When you're writing dank specifications but all your memes are from last year.",
       "thumbnails": {
         "medium": {
-          "url": "https://fake-static-domain/hide-the-pain.jpg",
-          "width": 320,
-          "height": 180
+          "url": "https://fake-static-domain/sm-hide-the-pain.jpg"
+        },
+        "high": {
+          "url": "https://fake-static-domain/hide-the-pain.jpg"
         }
       }
     },

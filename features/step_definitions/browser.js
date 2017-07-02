@@ -1,28 +1,48 @@
 import { defineSupportCode } from 'cucumber';
-// import { By, util } from 'selenium-webdriver';
 
-defineSupportCode(({ When }) => {
+defineSupportCode(({ Given, When, Then, After }) => {
 
-    When('I have a {string} screen size', function(deviceType) {
+    Given('I have a {string} device', function(deviceType) {
 
-        const { driver, devices } = this;
-        const { width, height } = devices[deviceType];
+        const { createDriver, driver, devices } = this;
 
-        driver.manage().window().setSize(width, height);
+        if (driver) throw new Error('A driver is already running for this scenario');
+
+        const deviceMetrics = devices[deviceType];
+        const deviceEmulation = { deviceMetrics };
+
+        this.driver = createDriver({ deviceEmulation });
 
     });
 
-    When('I navigate to the playlist {stringInDoubleQuotes}', { timeout: -1 }, async function(playlistId) {
+    When('I navigate to {stringInDoubleQuotes}', { timeout: -1 }, async function(path) {
 
         const { driver, baseUri } = this;
 
-        await new Promise(resolve => setTimeout(resolve, 10000));
-
-        const playlistUri = `${baseUri}/p/${playlistId}`;
-
-        await driver.get(playlistUri);
+        await driver.get(baseUri + path);
 
     });
 
+    Then('I see the browser navigates to {stringInDoubleQuotes}', async function(path) {
+
+        const { driver, baseUri } = this;
+
+        const expected = baseUri + path;
+
+        const actual = await driver.getCurrentUrl();
+
+        actual.should.startWith(expected);
+
+    });
+
+    After(async function() {
+
+        const { driver } = this;
+
+        this.driver = null;
+
+        if (driver) await driver.quit();
+
+    });
 
 });
