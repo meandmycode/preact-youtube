@@ -1,4 +1,5 @@
-/* eslint-disable no-console, import/no-extraneous-dependencies */
+/* global process */
+/* eslint-disable no-console */
 import httpServer from './http-server';
 
 const host = process.env.HOST || '0.0.0.0';
