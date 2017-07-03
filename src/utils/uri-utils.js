@@ -14,7 +14,10 @@ export const parse = str => {
     const anchor = document.createElement('a');
     anchor.href = str;
 
-    const { pathname, search } = anchor;
+    let { pathname, search } = anchor;
+
+    // devnote: ie quirk with non-leading slash on pathname
+    if (pathname[0] !== '/') pathname = '/' + pathname;
 
     const query = deserialize(search);
 
