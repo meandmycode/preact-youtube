@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import { Buffer } from '../../utils/iteration-utils';
+import Buffer from '../../utils/buffer';
 
 const STYLE_INNER = 'position: relative;overflow-y: scroll;-webkit-overflow-scrolling: touch;height: 100%';
 const STYLE_CONTENT = 'position: absolute;left: 0;width: 100%';
