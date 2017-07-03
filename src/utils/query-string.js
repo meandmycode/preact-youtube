@@ -28,4 +28,4 @@ export const deserialize = str => {
 
     return obj;
 
-}
+};

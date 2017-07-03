@@ -1,3 +1,4 @@
+/* global __dirname */
 import path from 'path';
 import { DefinePlugin, NamedModulesPlugin, optimize } from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';

@@ -1,3 +1,4 @@
+/* global process */
 /* eslint-disable no-console, import/no-extraneous-dependencies */
 import { writeFileSync } from 'fs';
 import webpack from 'webpack';
