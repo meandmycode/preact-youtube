@@ -35,6 +35,7 @@ export default class StreamingList extends Component {
         const takeCount = Math.ceil((height + (overscan * 2)) / itemSize);
 
         const hasPendingChanges =
+            this.buffer !== buffer ||
             this.state.skipCount !== skipCount ||
             this.state.takeCount !== takeCount ||
             this.state.height !== height;
@@ -91,7 +92,7 @@ export default class StreamingList extends Component {
         const hasUpdatableChanges =
             this.props.position !== position ||
             this.state.height !== height ||
-            this.buffer !== buffer;
+            this.state.buffer !== buffer;
 
         if (hasUpdatableChanges) {
 
