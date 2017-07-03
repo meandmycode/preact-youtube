@@ -4,7 +4,7 @@ export default class JsonVisitor {
 
     visit(it) {
 
-        if (it == null) return it;
+        if (it == null) return this.visitValue(it);
 
         if (isPlainObject(it)) {
             return this.visitObject(it);
