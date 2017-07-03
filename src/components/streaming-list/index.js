@@ -8,6 +8,8 @@ const getHeightForCount = (itemHeight, itemGutter, count) => count * (itemHeight
 
 export default class StreamingList extends Component {
 
+    hasInitializedPosition = false;
+
     state = {
         items: [],
         skipCount: 0,
@@ -98,8 +100,12 @@ export default class StreamingList extends Component {
 
             this.updateVisibleRange({ buffer, position, height, itemHeight, itemGutter }).then(() => {
 
+                if (this.hasInitializedPosition) return;
+
+                this.hasInitializedPosition = true;
+
                 this.forceUpdate(() => {
-                    this.base.scrollTop = this.props.position;
+                    this.base.scrollTop = position;
                 });
 
             });
