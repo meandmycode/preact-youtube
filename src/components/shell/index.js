@@ -3,7 +3,7 @@ import Match from 'preact-router/match';
 
 import { getReferrer } from '../../utils/routing';
 
-import './style.css';
+import styles from './style.css';
 
 class Header extends Component {
 
@@ -12,8 +12,8 @@ class Header extends Component {
         const referrer = getReferrer(url);
 
         return (referrer
-            ? <a styleName='back' part='backlink' href={referrer.url}>Back to {referrer.type}</a>
-            : <a styleName='home' part='homelink' href='/'>YouTube playlist</a>
+            ? <a class={styles.back} part='backlink' href={referrer.url}>Back to {referrer.type}</a>
+            : <a class={styles.home} part='homelink' href='/'>YouTube playlist</a>
         );
 
     }
@@ -21,11 +21,11 @@ class Header extends Component {
     render({ busy }) {
 
         return (
-            <div styleName='header'>
-                <nav styleName='nav'>
+            <div class={styles.header}>
+                <nav class={styles.nav}>
                     <Match>{this.matchHandler}</Match>
                 </nav>
-                <div styleName='knight-rider' hidden={!busy} />
+                <div class={styles.knightrider} hidden={!busy} />
             </div>
         );
     }
@@ -33,9 +33,9 @@ class Header extends Component {
 }
 
 export default ({ busy, children, ...props }) => (
-    <div component='shell' styleName='host' {...props}>
+    <div component='shell' class={styles.host} {...props}>
         <Header busy={busy} />
-        <div styleName='content'>
+        <div class={styles.content}>
             {children}
         </div>
     </div>

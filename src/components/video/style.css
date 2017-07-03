@@ -9,7 +9,7 @@
     overflow-y: scroll;
 }
 
-.media, .details-wrapper {
+.media, .details {
     flex-shrink: 0;
 }
 
@@ -32,9 +32,6 @@
 
 .video {
     border: none;
-}
-
-.details-wrapper {
 }
 
 .details {

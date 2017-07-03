@@ -8,7 +8,7 @@ import MediaQuery from '../media-query';
 import StreamingList from '../streaming-list';
 import RichText from '../rich-text';
 
-import './style.css';
+import styles from './style.css';
 
 const getItemUrl = (playlist, video) => createReferrerUrl(getVideoUrl(video), getPlaylistUrl(playlist));
 const getVideoThumbnail = (video, matches) => video.snippet.thumbnails ? video.snippet.thumbnails[matches ? 'medium' : 'high'].url : null;
@@ -18,13 +18,13 @@ class Playlist extends Component {
     update({ playlist, matches }) {
 
         const itemTemplate = video => (
-            <div styleName='item' mobile={matches ? '' : null} component='video'>
-                <div styleName='details'>
-                    <Link styleName='title' part='title' href={getItemUrl(playlist, video)}>{video.snippet.title}</Link>
-                    <div styleName='published' part='published'>Published on {shortDateFormatter.format(video.snippet.publishedAt)}</div>
-                    <RichText styleName='description' part='description' text={video.snippet.description} />
+            <div class={styles.item} mobile={matches ? '' : null} component='video'>
+                <div class={styles.details}>
+                    <Link class={styles.title} part='title' href={getItemUrl(playlist, video)}>{video.snippet.title}</Link>
+                    <div class={styles.published} part='published'>Published on {shortDateFormatter.format(video.snippet.publishedAt)}</div>
+                    <RichText class={styles.description} part='description' text={video.snippet.description} />
                 </div>
-                <Link styleName='thumbnail'
+                <Link class={styles.thumbnail}
                     part='thumbnail'
                     title={video.snippet.title}
                     href={getItemUrl(playlist, video)}
@@ -55,7 +55,7 @@ class Playlist extends Component {
 
     render = ({ playlist, position, onPositionChange }, { itemTemplate, itemHeight }) => (
         <StreamingList
-            styleName='playlist'
+            class={styles.playlist}
             component='playlist'
             source={playlist.items}
             total={playlist.total}
