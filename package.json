@@ -31,12 +31,14 @@
     "html-webpack-plugin": "^2.29.0",
     "http-proxy": "^1.16.2",
     "postcss-loader": "^2.0.6",
+    "preact-render-to-string": "^3.6.3",
     "selenium-webdriver": "^3.4.0",
     "webpack": "^3.0.0",
     "webpack-dev-middleware": "^1.11.0"
   },
   "dependencies": {
     "core-js": "^2.4.1",
+    "es6-promise": "^4.1.1",
     "preact": "^8.1.0",
     "preact-compat": "^3.16.0",
     "preact-router": "^2.5.2",
