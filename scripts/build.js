@@ -5,7 +5,11 @@ import webpack from 'webpack';
 
 import configure from '../webpack.config';
 
-const config = configure({ production: true });
+const appConfig = {
+    youtubeKey: process.env.YOUTUBE_API_KEY,
+};
+
+const config = configure({ production: true, appConfig });
 
 const statsOptions = {
     colors: true,
@@ -28,7 +32,7 @@ webpack(config, (err, stats) => {
     if (hasErrors) {
 
         console.log('\n');
-        console.log('✖️ Web application build failed!');
+        console.log('✖️  Web application build failed!');
         console.log('\n');
 
         return process.exit(1);
@@ -36,7 +40,7 @@ webpack(config, (err, stats) => {
     }
 
     console.log('\n');
-    console.log('🌟 Web application build successful!');
+    console.log('🌟  Web application build successful!');
     console.log('\n');
 
     writeFileSync('stats.json', JSON.stringify(stats.toJson()), null, 2);
