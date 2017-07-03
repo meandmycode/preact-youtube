@@ -9,6 +9,14 @@ dependencies:
     - sudo sed -i 's|HERE/chrome\"|HERE/chrome\" --disable-setuid-sandbox|g' /opt/google/chrome/google-chrome
     - rm google-chrome.deb
 
+compile:
+  override:
+    - npm run build
+
+general:
+  artifacts:
+    - dist
+
 deployment:
   production:
     branch: master
