@@ -13,7 +13,6 @@
     ["transform-object-rest-spread"],
     ["transform-class-properties"],
     ["transform-async-generator-functions"],
-    ["transform-react-jsx", { "pragma": "h" }],
-    ["react-css-modules"]
+    ["transform-react-jsx", { "pragma": "h" }]
   ]
 }
