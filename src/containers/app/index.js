@@ -7,7 +7,7 @@ import Shell from '../../components/shell';
 import Playlist from '../playlist';
 import Video from '../video';
 
-const youtubeService = new CachingYoutubeService('__API_KEY_HERE__');
+const youtubeService = new CachingYoutubeService(YOUTUBE_API_KEY); // eslint-disable-line no-undef
 const defaultPlaylistId = 'PLSi28iDfECJPJYFA4wjlF5KUucFvc0qbQ';
 
 export default class App extends Component {

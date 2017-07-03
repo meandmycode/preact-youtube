@@ -1,10 +1,15 @@
+/* global process */
 import express from 'express';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 
 import configure from '../webpack.config';
 
-const config = configure();
+const appConfig = {
+    youtubeKey: process.env.YOUTUBE_API_KEY,
+};
+
+const config = configure({ appConfig });
 
 const app = express();
 const compiler = webpack(config);

@@ -6,7 +6,7 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 const { UglifyJsPlugin, CommonsChunkPlugin } = optimize;
 
-export default ({ production, coverage } = {}) => {
+export default ({ production, coverage, appConfig } = {}) => {
 
     const outputPath = 'dist';
     const ASSET_NAME_TEMPLATE = '[name]-[hash:6].[ext]';
@@ -56,6 +56,10 @@ export default ({ production, coverage } = {}) => {
         new HtmlWebpackPlugin({
             template: './index.ejs',
             minify: { collapseWhitespace: true },
+        }),
+
+        new DefinePlugin({
+            'YOUTUBE_API_KEY': JSON.stringify(appConfig.youtubeKey),
         }),
 
         extractCss,
