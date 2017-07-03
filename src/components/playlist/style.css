@@ -1,0 +1,90 @@
+.playlist {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.item {
+    box-sizing: border-box;
+    background: #f4b400;
+    color: #000;
+    height: 100%;
+    max-width: 1000px;
+    width: calc(100% - 40px); /* devnote: this is side padding, this is often done with margins, but we're already using them for horizontal alignment */
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    position: relative; /* devnote: fixes an edge rendering bug by forcing composition */
+}
+
+.thumbnail {
+    background: rgba(0, 0, 0, 0.1) no-repeat center center / cover;
+}
+
+.details {
+    font-weight: 500;
+    display: flex;
+    flex-flow: column;
+}
+
+.title {
+    color: inherit;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.published {
+    line-height: 1;
+    font-size: 14px;
+    margin-top: 5px;
+    opacity: 0.65;
+}
+
+.description {
+    line-height: 1.55;
+    font-weight: 500;
+    font-size: 14px;
+    opacity: 0.8;
+    margin-top: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+}
+
+.description a {
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 1px solid #111;
+}
+
+/* mobile specific layouts */
+.item[mobile] {
+    flex-flow: column;
+}
+
+.item[mobile] .description {
+    display: none;
+}
+
+.item[mobile] .thumbnail {
+    flex: auto;
+}
+
+.item[mobile] .details {
+    padding: 10px;
+}
+
+/* non-mobile specific layouts */
+.item:not([mobile]) .thumbnail {
+    order: -1;
+    flex: 50% 0 0;
+    display: flex;
+    max-width: 352px;
+}
+
+.item:not([mobile]) .details {
+    padding: 20px;
+    flex: 1; /* devnote: required for legacy ie */
+}

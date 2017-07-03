@@ -1,0 +1,5 @@
+# ignore built files
+dist/*
+
+# ignore config files
+postcss.config.js

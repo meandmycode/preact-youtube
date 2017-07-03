@@ -1,0 +1,22 @@
+{
+  "pageInfo": {
+    "totalResults": 1,
+    "resultsPerPage": 1
+  },
+  "items": [{
+    "id": "swank",
+    "snippet": {
+      "publishedAt": "1985-03-18T16:20:00.000Z",
+      "title": "Swanky McSwanks",
+      "description": "Probably the best video in the world.",
+      "thumbnails": {
+        "medium": {
+          "url": "https://fake-static-domain/sm-swanky.jpg"
+        },
+        "high": {
+          "url": "https://fake-static-domain/swanky.jpg"
+        }
+      }
+    }
+  }]
+}
