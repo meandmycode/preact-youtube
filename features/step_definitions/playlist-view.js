@@ -46,11 +46,7 @@ async function getPlaylistComponent(driver) {
 
     const playlist = await view.one('playlist');
 
-    const scrollingContainer = await playlist.queryOne('[data-scrolling-container]');
-
-    return {
-        scrollingContainer,
-    };
+    return await playlist.parts();
 
 }
 
@@ -119,7 +115,7 @@ defineSupportCode(({ Then, When }) => {
 
         const playlist = await getPlaylistComponent(driver);
 
-        await driver.executeScript('arguments[0].scrollTop = arguments[1]', playlist.scrollingContainer, top);
+        await driver.executeScript('arguments[0].scrollTop = arguments[1]', playlist.items, top);
 
     }));
 
@@ -129,7 +125,7 @@ defineSupportCode(({ Then, When }) => {
 
         const playlist = await getPlaylistComponent(driver);
 
-        const actual = await driver.executeScript('return arguments[0].scrollTop', playlist.scrollingContainer);
+        const actual = await driver.executeScript('return arguments[0].scrollTop', playlist.items);
 
         actual.should.equal(top);
 

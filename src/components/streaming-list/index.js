@@ -4,13 +4,7 @@ import { skip, take, toArray, Buffer } from '../../utils/iteration-utils';
 const STYLE_INNER = 'position: relative;overflow-y: scroll;height: 100%';
 const STYLE_CONTENT = 'position: absolute;left: 0;width: 100%';
 
-function getHeightForCount(itemHeight, itemGutter, count) {
-
-    if (count === 0) return 0;
-
-    return count * (itemHeight + itemGutter);
-
-}
+const getHeightForCount = (itemHeight, itemGutter, count) => count * (itemHeight + itemGutter);
 
 export default class StreamingList extends Component {
 
@@ -23,12 +17,17 @@ export default class StreamingList extends Component {
      * Handles callbacks from scroll and resize events, we throttle these high frequency
      * events via animation frame callbacks; we enqueue work to update the visible range.
      */
-    handleResize = () => requestAnimationFrame(this.updateVisibleRange);
-    handleScroll = () => requestAnimationFrame(this.handleResizeInvalidated);
+    handleResize = () => requestAnimationFrame(this.handleResizeInvalidated);
+    handleScroll = () => requestAnimationFrame(this.handleScrollInvalidated);
 
     handleResizeInvalidated = () => {
-        const position = this.base.firstElementChild.scrollTop;
-        this.props.onPositionChange({ position });
+        const height = this.base.offsetHeight;
+        this.setState({ height });
+    }
+
+    handleScrollInvalidated = () => {
+        const position = this.base.scrollTop;
+        this.props.onPositionChange(position);
     }
 
     /**
@@ -39,11 +38,8 @@ export default class StreamingList extends Component {
      * state change is significant (i.e., it would change the items being rendered)
      * then we trigger async work to build this item list via shouldComponentUpdate.
      */
-    updateVisibleRange = async isSourceUpdating => {
+    updateVisibleRange = async ({ buffer, position = 0, height, itemHeight, itemGutter }) => {
 
-        const { itemHeight, itemGutter, position = 0 } = this.props;
-
-        const height = this.base.offsetHeight;
         const itemSize = itemHeight + itemGutter;
 
         const overscan = height * 2;
@@ -57,9 +53,9 @@ export default class StreamingList extends Component {
             this.state.takeCount !== takeCount ||
             this.state.height !== height;
 
-        if (isSourceUpdating || hasPendingChanges) {
+        if (hasPendingChanges) {
 
-            const items = await toArray(take(skip(this.state.buffer, skipCount), takeCount));
+            const items = await toArray(take(skip(buffer, skipCount), takeCount));
 
             this.setState({ items, skipCount, takeCount, height });
 
@@ -78,54 +74,59 @@ export default class StreamingList extends Component {
      */
     async componentDidMount() {
 
-        const scrollingContainer = this.base.querySelector('[data-scrolling-container]');
         const window = this.base.ownerDocument.defaultView;
 
-        scrollingContainer.addEventListener('scroll', this.handleScroll, { passive: true });
+        this.base.addEventListener('scroll', this.handleScroll, { passive: true });
         window.addEventListener('resize', this.handleResize, { passive: true });
 
+        const height = this.base.offsetHeight;
         const buffer = new Buffer(this.props.source);
+
+        this.setState({ buffer, height });
+
+    }
+
+    componentWillReceiveProps({ source }) {
+
+        if (source === this.props.source) return;
+
+        const buffer = new Buffer(source);
+
         this.setState({ buffer });
 
-        await this.updateVisibleRange();
-
-        this.forceUpdate(() => {
-            this.base.firstElementChild.scrollTop = this.props.position;
-        });
-
     }
 
-    componentWillReceiveProps({ source, position }) {
+    shouldComponentUpdate({ position, itemHeight, itemGutter, itemTemplate }, { buffer, items, height }) {
 
-        const isSourceUpdating = source !== this.props.source;
+        const hasRenderableChanges =
+            this.props.itemTemplate !== itemTemplate ||
+            this.state.items !== items;
 
-        if (!isSourceUpdating && position === this.props.position) return;
+        const hasUpdatableChanges =
+            this.props.position !== position ||
+            this.state.height !== height ||
+            this.buffer !== buffer;
 
-        if (isSourceUpdating) {
-            const buffer = new Buffer(this.props.source);
-            this.setState({ buffer });
+        if (hasUpdatableChanges) {
+
+            this.updateVisibleRange({ buffer, position, height, itemHeight, itemGutter }).then(() => {
+
+                this.forceUpdate(() => {
+                    this.base.scrollTop = this.props.position;
+                });
+
+            });
+
         }
 
-        this.updateVisibleRange(isSourceUpdating);
-
+        return hasRenderableChanges;
     }
-
-    /**
-     * Handles triggering a tile update if significant changes have occured to the
-     * visible items, if the current state items do not match the incoming state items
-     * then the component should update, otherwise it should not; however if changes
-     * to the visible range has occurred then async work is started via updateTiles
-     */
-    shouldComponentUpdate = ({ itemTemplate }, { items }) =>
-        this.props.itemTemplate !== itemTemplate ||
-        this.state.items !== items;
 
     componentWillUnmount() {
 
-        const scrollingContainer = this.base.querySelector('[data-scrolling-container]');
         const window = this.base.ownerDocument.defaultView;
 
-        scrollingContainer.removeEventListener('scroll', this.handleScroll);
+        this.base.removeEventListener('scroll', this.handleScroll);
         window.removeEventListener('resize', this.handleResize);
 
     }
@@ -139,16 +140,14 @@ export default class StreamingList extends Component {
         const maximumHeight =  getHeightForCount(itemHeight, itemGutter, buffer ? Math.min(buffer.pending.length, total) : 0);
 
         return (
-            <div {...props}>
-                <div data-scrolling-container={''} style={`${STYLE_INNER}`}>
-                    <div style={`${STYLE_CONTENT};height: ${maximumHeight + itemGutter}px`}>
-                        <div style={`height: ${offset}px`} />
-                        {items.map((item, i) => (
-                            <div key={skipCount + i} style={`height: ${itemHeight}px;margin-top: ${itemGutter}px`}>
-                                {itemTemplate(item)}
-                            </div>
-                        ))}
-                    </div>
+            <div style={`${STYLE_INNER}`} {...props}>
+                <div style={`${STYLE_CONTENT};height: ${maximumHeight + itemGutter}px`}>
+                    <div style={`height: ${offset}px`} />
+                    {items.map((item, i) => (
+                        <div key={skipCount + i} style={`height: ${itemHeight}px;margin-top: ${itemGutter}px`}>
+                            {itemTemplate(item)}
+                        </div>
+                    ))}
                 </div>
             </div>
         );

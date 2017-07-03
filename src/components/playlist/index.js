@@ -54,17 +54,18 @@ class Playlist extends Component {
         this.state.itemHeight !== itemHeight;
 
     render = ({ playlist, position, onPositionChange }, { itemTemplate, itemHeight }) => (
-        <StreamingList
-            class={styles.playlist}
-            component='playlist'
-            source={playlist.items}
-            total={playlist.total}
-            position={position}
-            itemTemplate={itemTemplate}
-            itemHeight={itemHeight}
-            itemGutter={20}
-            onPositionChange={onPositionChange}
-        />
+        <div class={styles.playlist} component='playlist'>
+            <StreamingList
+                part='items'
+                source={playlist.items}
+                total={playlist.total}
+                position={position}
+                itemTemplate={itemTemplate}
+                itemHeight={itemHeight}
+                itemGutter={20}
+                onPositionChange={onPositionChange}
+            />
+        </div>
     );
 }
 

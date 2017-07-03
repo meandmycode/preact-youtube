@@ -36,15 +36,17 @@ export default class PlaylistView extends Component {
         if (cancellor) cancellor();
     }
 
-    render({ routeState, onRouteStateChange }, { playlist }) {
+    handlePositionChange = position => this.props.onRouteStateChange({ position })
+
+    render({ routeState }, { playlist }) {
 
         if (playlist == null) return;
 
         return (
             <Playlist
                 playlist={playlist}
-                position={routeState ? routeState.position : undefined}
-                onPositionChange={onRouteStateChange}
+                position={routeState && routeState.position}
+                onPositionChange={this.handlePositionChange}
             />
         );
     }
