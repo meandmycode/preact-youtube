@@ -86,4 +86,5 @@
 
 .item:not([mobile]) .details {
     padding: 20px;
+    flex: 1; /* devnote: required for legacy ie */
 }
