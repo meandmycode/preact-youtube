@@ -4,6 +4,7 @@
   "description": "Probably the best youtube app ever made",
   "devDependencies": {
     "autoprefixer": "^7.1.1",
+    "ava": "^0.20.0",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
@@ -30,6 +31,7 @@
     "file-loader": "^0.11.2",
     "html-webpack-plugin": "^2.29.0",
     "http-proxy": "^1.16.2",
+    "nyc": "^11.0.3",
     "postcss-loader": "^2.0.6",
     "preact-render-to-string": "^3.6.3",
     "selenium-webdriver": "^3.4.0",
@@ -45,11 +47,19 @@
     "regenerator-runtime": "^0.10.5"
   },
   "scripts": {
-    "lint": "node_modules/.bin/eslint .",
     "start": "node_modules/.bin/babel-node --presets es2015 -- scripts/server",
     "debug": "node_modules/.bin/babel-node --presets es2015 -- scripts/dev-server",
     "build": "node_modules/.bin/babel-node --presets es2015 -- scripts/build",
-    "e2e": "node_modules/.bin/babel-node --presets es2015 --plugins transform-class-properties  node_modules/cucumber/bin/cucumber.js"
+    "lint": "node_modules/.bin/eslint .",
+    "unit": "node_modules/.bin/nyc node_modules/.bin/ava",
+    "e2e": "node_modules/.bin/babel-node --presets es2015 --plugins transform-class-properties  node_modules/cucumber/bin/cucumber.js",
+    "test": "npm run lint && npm run unit && npm run e2e"
+  },
+  "ava": {
+    "require": "babel-register",
+    "babel": {
+      "babelrc": true
+    }
   },
   "maintainers": [
     "Stephen Taylor <meandmycode@gmail.com> (meandmycode.com)"
