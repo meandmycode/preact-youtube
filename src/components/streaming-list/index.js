@@ -134,8 +134,7 @@ export default class StreamingList extends Component {
 
         return (
             <div style={`${STYLE_INNER}`} {...props}>
-                <div style={`${STYLE_CONTENT};height: ${maximumHeight + itemGutter}px`}>
-                    <div style={`height: ${offset}px`} />
+                <div style={`${STYLE_CONTENT};height: ${(maximumHeight + itemGutter) - offset}px;transform: translateY(${offset}px)`}>
                     {items.map((item, i) => (
                         <div key={skipCount + i} style={`height: ${itemHeight}px;margin-top: ${itemGutter}px`}>
                             {itemTemplate(item)}
