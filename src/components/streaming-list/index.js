@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import { skip, take, toArray, Buffer } from '../../utils/iteration-utils';
+import { Buffer } from '../../utils/iteration-utils';
 
 const STYLE_INNER = 'position: relative;overflow-y: scroll;-webkit-overflow-scrolling: touch;height: 100%';
 const STYLE_CONTENT = 'position: absolute;left: 0;width: 100%';
@@ -46,7 +46,7 @@ export default class StreamingList extends Component {
 
         if (hasPendingChanges) {
 
-            const items = await toArray(take(skip(buffer, skipCount), takeCount));
+            const items = await buffer.slice(skipCount, skipCount + takeCount);
 
             this.setState({ items, skipCount, takeCount, height });
 

@@ -36,10 +36,22 @@ export async function toArray(iterator) {
 
 export class Buffer {
 
+    done = false;
     pending = [];
+    items = [];
 
     constructor(source) {
         this.source = source;
+    }
+
+    slice(start, end) {
+
+        if (this.done || this.items.length >= end){
+            return this.items.slice(start, end);
+        }
+
+        return toArray(take(skip(this, start), end - start));
+
     }
 
     async *[Symbol.asyncIterator]() {
@@ -68,9 +80,13 @@ export class Buffer {
 
             if (iteration.done) break;
 
+            this.items.push(iteration.value);
+
             yield iteration.value;
 
         }
+
+        this.done = true;
 
     }
 
