@@ -7,7 +7,7 @@ Feature: Playlist
         Given a youtube playlist "sample-playlist.json" exists as "sample-playlist" from the api
 
     Scenario: On tablet I can view some swenk swenk youtube playlist
-        Given I have a tablet device
+        And I have a tablet device
         And I navigate to "/p/sample-playlist"
         Then I see a list of videos:
         | title           | published    | thumbnail          | summary                                                                        |
@@ -19,13 +19,13 @@ Feature: Playlist
         # | Harold          | Oct 23, 2011 | hide-the-pain.jpg  | When you're writing dank specifications but all your memes are from last year. |
 
     Scenario: On tablet I can click the title of a video to navigate to the detail view
-        Given I have a tablet device
+        And I have a tablet device
         And I navigate to "/p/sample-playlist"
         And I click on the video title "Damn daniel"
         Then I see the browser navigates to "/v/daniel"
 
     Scenario: On tablet I can click the title of a video to navigate to the detail view and then return back to the playlist
-        Given I have a tablet device
+        And I have a tablet device
         And I navigate to "/p/sample-playlist"
         And I click on the video title "Damn daniel"
         Then I see the browser navigates to "/v/daniel"
@@ -33,13 +33,13 @@ Feature: Playlist
         Then I see the browser navigates to "/p/sample-playlist"
 
     Scenario: On tablet I can click the thumbnail of a video to navigate to the detail view
-        Given I have a tablet device
+        And I have a tablet device
         And I navigate to "/p/sample-playlist"
         And I click on the video thumbnail with the title "Sad Ben Affleck"
         Then I see the browser navigates to "/v/lolben"
 
     Scenario: On tablet I can click the thumbnail of a video to navigate to the detail view and then return back to the playlist
-        Given I have a tablet device
+        And I have a tablet device
         And I navigate to "/p/sample-playlist"
         And I click on the video thumbnail with the title "Harold"
         Then I see the browser navigates to "/v/harold"
@@ -47,7 +47,7 @@ Feature: Playlist
         Then I see the browser navigates to "/p/sample-playlist"
 
     Scenario: On tablet I can scroll the playlist, navigate to a video, return and be at the same scroll position
-        Given I have a tablet device
+        And I have a tablet device
         And I navigate to "/p/sample-playlist"
         When I scroll the playlist by 185px
         And I click on the video title "Harambe"
@@ -57,7 +57,7 @@ Feature: Playlist
 
 
     Scenario: On mobile I can view some swenk swenk youtube playlist
-        When I have a mobile device
+        And I have a mobile device
         And I navigate to "/p/sample-playlist"
         Then I see a list of videos:
         | title           | published    | thumbnail             | summary |
@@ -69,13 +69,13 @@ Feature: Playlist
         # | Harold          | Oct 23, 2011 | sm-hide-the-pain.jpg  |         |
 
     Scenario: On mobile I can click the title of a video to navigate to the detail view
-        When I have a mobile device
+        And I have a mobile device
         And I navigate to "/p/sample-playlist"
         And I click on the video title "Relatable"
         Then I see the browser navigates to "/v/arthur"
 
     Scenario: On mobile I can click the title of a video to navigate to the detail view and then return back to the playlist
-        When I have a mobile device
+        And I have a mobile device
         And I navigate to "/p/sample-playlist"
         And I click on the video title "Relatable"
         Then I see the browser navigates to "/v/arthur"
@@ -83,13 +83,13 @@ Feature: Playlist
         Then I see the browser navigates to "/p/sample-playlist"
 
     Scenario: On mobile I can click the thumbnail of a video to navigate to the detail view
-        When I have a mobile device
+        And I have a mobile device
         And I navigate to "/p/sample-playlist"
         And I click on the video thumbnail with the title "Harold"
         Then I see the browser navigates to "/v/harold"
 
     Scenario: On mobile I can click the thumbnail of a video to navigate to the detail view and then return back to the playlist
-        When I have a mobile device
+        And I have a mobile device
         And I navigate to "/p/sample-playlist"
         And I click on the video thumbnail with the title "Damn daniel"
         Then I see the browser navigates to "/v/daniel"
@@ -97,7 +97,7 @@ Feature: Playlist
         Then I see the browser navigates to "/p/sample-playlist"
 
     Scenario: On mobile I can scroll the playlist, navigate to a video, return and be at the same scroll position
-        Given I have a mobile device
+        And I have a mobile device
         And I navigate to "/p/sample-playlist"
         When I scroll the playlist by 122px
         And I click on the video title "Harambe"

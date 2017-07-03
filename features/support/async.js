@@ -19,5 +19,17 @@ export async function find(source, predicate) {
         if (await predicate(item, i++)) return item;
     }
 
+}
+
+export async function filter(source, predicate) {
+
+    let i = 0;
+    const results = [];
+
+    for (const item of source) {
+        if (await predicate(item, i++)) results.push(item);
+    }
+
+    return results;
 
 }

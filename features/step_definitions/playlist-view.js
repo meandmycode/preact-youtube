@@ -2,7 +2,7 @@ import { defineSupportCode } from 'cucumber';
 import { eventually } from '../support/expectly';
 import { ComponentView } from '../support/dom-components';
 
-import { find } from '../support/async';
+import { find, filter } from '../support/async';
 
 async function getVideoComponents(driver) {
 
@@ -16,9 +16,13 @@ async function getVideoComponents(driver) {
 async function getVideosViaDOM(driver) {
 
     const view = new ComponentView(driver);
+    const viewport = await view.viewport();
+
     const videoComponents = await view.many('video');
 
-    const descriptors = videoComponents.map(async videoComponent => {
+    const visibleVideoComponents = await filter(videoComponents, async videoComponent => viewport.intersects(await videoComponent.bounds()));
+
+    const descriptors = visibleVideoComponents.map(async videoComponent => {
 
         const parts = await videoComponent.parts();
 
@@ -91,6 +95,8 @@ defineSupportCode(({ Then, When }) => {
 
     }));
 
+    When('I wait', { timeout: -1 }, () => new Promise(resolve => setTimeout(resolve, 100000)));
+
     When('I click on the video thumbnail with the title {stringInDoubleQuotes}', eventually(async function(videoName) {
 
         const { driver } = this;
@@ -115,7 +121,7 @@ defineSupportCode(({ Then, When }) => {
 
         const playlist = await getPlaylistComponent(driver);
 
-        await driver.executeScript('arguments[0].scrollTop = arguments[1]', playlist.items, top);
+        await playlist.items.set('scrollTop', top);
 
     }));
 
@@ -125,7 +131,7 @@ defineSupportCode(({ Then, When }) => {
 
         const playlist = await getPlaylistComponent(driver);
 
-        const actual = await driver.executeScript('return arguments[0].scrollTop', playlist.items);
+        const actual = await playlist.items.get('scrollTop');
 
         actual.should.equal(top);
 

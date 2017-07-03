@@ -94,12 +94,15 @@ const createDriver = capabilities => new Webdriver.Builder()
 
 //
 
+const initializing = new Promise(resolve => setTimeout(resolve, 5000));
+
 class World {
     baseUri = baseUri;
     createProxy = createProxy;
     createDriver = createDriver;
     httpServer = httpServer;
     devices = devices;
+    initializing = initializing;
 }
 
 defineSupportCode(({ setWorldConstructor }) => setWorldConstructor(World));
