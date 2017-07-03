@@ -28,6 +28,7 @@ class Playlist extends Component {
                     part='thumbnail'
                     title={video.snippet.title}
                     href={getItemUrl(playlist, video)}
+                    src={getVideoThumbnail(video, matches)}
                     style={`background-image: url(${getVideoThumbnail(video, matches)})`}
                 />
             </div>
