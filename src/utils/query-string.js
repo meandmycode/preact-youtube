@@ -14,7 +14,11 @@ export const serialize = obj => {
 
 export const deserialize = str => {
 
-    const pairs = str.slice(1).split('&');
+    if (str[0] === '?') str = str.slice(1);
+
+    if (str === '') return ({});
+
+    const pairs = str.split('&');
 
     const obj = pairs.reduce((map, pair) => {
 

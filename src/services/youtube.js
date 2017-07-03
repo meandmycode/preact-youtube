@@ -1,6 +1,6 @@
-import { join } from '../../utils/uri-utils';
-import { serialize } from '../../utils/query-string';
-import JsonNormalizingVisitor from '../../utils/json-normalizing-visitor';
+import { joinPaths } from '../utils/uri-utils';
+import { serialize } from '../utils/query-string';
+import JsonNormalizingVisitor from '../utils/json-normalizing-visitor';
 
 const normalizer = new JsonNormalizingVisitor();
 
@@ -43,7 +43,7 @@ export default class YoutubeService {
     }
 
     getUri(path, parameters) {
-        return join(this.baseUri, path) + serialize({ ...this.baseParameters, ...parameters });
+        return joinPaths(this.baseUri, path) + serialize({ ...this.baseParameters, ...parameters });
     }
 
     getResource(path, parameters, options) {
@@ -66,6 +66,8 @@ export default class YoutubeService {
             const nextPage = await pager(page.nextPageToken);
             const subItems = this.getPlaylistItemsIterator(nextPage, pager);
 
+            // https://github.com/babel/babel-eslint/issues/415
+            // eslint-disable-next-line semi
             for await (const item of subItems) yield item;
 
         }
