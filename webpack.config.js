@@ -41,7 +41,7 @@ export default ({ production, coverage } = {}) => {
         {   // css pipeline
             test: /\.css$/,
             use: extractCss.extract({
-                use: ['css-loader?modules=true&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]', 'postcss-loader'],
+                use: ['css-loader?modules=true&importLoaders=1&localIdentName=[hash:base64:5]', 'postcss-loader'],
             }),
         },
         {   // other assets
@@ -53,7 +53,7 @@ export default ({ production, coverage } = {}) => {
     const plugins = [
 
         new HtmlWebpackPlugin({
-            template: './src/index.ejs',
+            template: './index.ejs',
             minify: { collapseWhitespace: true },
         }),
 
@@ -86,7 +86,9 @@ export default ({ production, coverage } = {}) => {
 
     return {
 
-        entry: './src/index.js',
+        context: path.resolve(__dirname, 'src'),
+
+        entry: './index.js',
 
         module: {
             rules,
