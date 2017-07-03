@@ -13,22 +13,8 @@ export default class StreamingList extends Component {
         skipCount: 0,
     }
 
-    /**
-     * Handles callbacks from scroll and resize events, we throttle these high frequency
-     * events via animation frame callbacks; we enqueue work to update the visible range.
-     */
-    handleResize = () => requestAnimationFrame(this.handleResizeInvalidated);
-    handleScroll = () => requestAnimationFrame(this.handleScrollInvalidated);
-
-    handleResizeInvalidated = () => {
-        const height = this.base.offsetHeight;
-        this.setState({ height });
-    }
-
-    handleScrollInvalidated = () => {
-        const position = this.base.scrollTop;
-        this.props.onPositionChange(position);
-    }
+    handleResize = () => this.setState({ height: this.base.offsetHeight })
+    handleScroll = () => this.props.onPositionChange(this.base.scrollTop)
 
     /**
      * Handles renderable frequency callbacks from high frequency source updates and
