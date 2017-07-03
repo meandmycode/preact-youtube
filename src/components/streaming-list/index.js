@@ -1,10 +1,12 @@
 import { h, Component } from 'preact';
 import { skip, take, toArray, Buffer } from '../../utils/iteration-utils';
 
-const STYLE_INNER = 'position: relative;overflow-y: scroll;height: 100%';
+const STYLE_INNER = 'position: relative;overflow-y: scroll;-webkit-overflow-scrolling: touch;height: 100%';
 const STYLE_CONTENT = 'position: absolute;left: 0;width: 100%';
 
 const getHeightForCount = (itemHeight, itemGutter, count) => count * (itemHeight + itemGutter);
+
+const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
 export default class StreamingList extends Component {
 
@@ -16,7 +18,7 @@ export default class StreamingList extends Component {
     }
 
     handleResize = () => this.setState({ height: this.base.offsetHeight })
-    handleScroll = () => this.props.onPositionChange(this.base.scrollTop)
+    handleScroll = () => this.props.onPositionChange(clamp(this.base.scrollTop, 0, this.base.scrollHeight - this.base.offsetHeight))
 
     /**
      * Handles renderable frequency callbacks from high frequency source updates and
