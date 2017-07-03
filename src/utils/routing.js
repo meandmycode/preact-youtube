@@ -10,8 +10,8 @@ export const getResourceType = uri => {
 
     const { pathname } = parse(uri);
 
-    if (pathname.startsWith('/p/')) return 'playlist';
-    if (pathname.startsWith('/v/')) return 'video';
+    if (/^\/p\//.test(pathname)) return 'playlist';
+    else if (/^\/v\//.test(pathname)) return 'video';
 
 };
 
