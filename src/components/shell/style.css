@@ -18,7 +18,6 @@
 .nav {
     display: flex;
     align-items: center;
-    justify-content: center;
     height: 55px;
     max-width: 1000px;
     width: calc(100% - 40px); /* devnote: this is side padding, this is often done with margins, but we're already using them for horizontal alignment */
@@ -29,7 +28,6 @@
 .home, .back {
     text-decoration: none;
     color: #222;
-    margin-right: auto;
 }
 
 .knightrider {
