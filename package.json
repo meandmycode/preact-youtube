@@ -36,7 +36,8 @@
     "preact-render-to-string": "^3.6.3",
     "selenium-webdriver": "^3.4.0",
     "webpack": "^3.0.0",
-    "webpack-dev-middleware": "^1.11.0"
+    "webpack-dev-middleware": "^1.11.0",
+    "webpack-pwa-manifest": "^3.1.0"
   },
   "dependencies": {
     "core-js": "^2.4.1",
