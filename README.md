@@ -7,12 +7,13 @@ This is an ultra rare youtube app, buy high, sell low.
 
 ## Technology stack
 
-**[⭐️ Preact](https://preactjs.com/) [🦄 Babel](https://babeljs.io/) [🐣 CSS modules](https://github.com/css-modules/css-modules) [🥒 Cucumber](https://cucumber.io/) [🚨 AVA](https://github.com/avajs/ava)**
+**⭐️ [Preact](https://preactjs.com/) 🦄 [Babel](https://babeljs.io/) 🐣 [CSS modules](https://github.com/css-modules/css-modules) 🥒 [Cucumber](https://cucumber.io/) 🚨 [AVA](https://github.com/avajs/ava)**
 
 ## Debugging and building prerequisites
 
 - [Node.js](https://nodejs.org/)
 - [Google API key with Youtube Data API v3 access](https://console.developers.google.com/apis)
+- Run `npm install`
 
 Your Google API key must be accessible for debugging and building via the environmental variable `YOUTUBE_API_KEY`.
 
