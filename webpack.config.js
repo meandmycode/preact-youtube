@@ -5,7 +5,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import WebpackPwaManifest from 'webpack-pwa-manifest';
 
-const { UglifyJsPlugin, CommonsChunkPlugin } = optimize;
+const { UglifyJsPlugin } = optimize;
 
 export default ({ production, coverage, appConfig } = {}) => {
 
