@@ -35,8 +35,8 @@ class Header extends Component {
 export default ({ busy, children, ...props }) => (
     <div component='shell' class={styles.host} {...props}>
         <Header busy={busy} />
-        <div class={styles.content}>
+        <main class={styles.content}>
             {children}
-        </div>
+        </main>
     </div>
 );

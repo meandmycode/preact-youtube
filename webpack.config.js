@@ -3,8 +3,9 @@ import path from 'path';
 import { DefinePlugin, NamedModulesPlugin, optimize } from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import WebpackPwaManifest from 'webpack-pwa-manifest';
 
-const { UglifyJsPlugin, CommonsChunkPlugin } = optimize;
+const { UglifyJsPlugin } = optimize;
 
 export default ({ production, coverage, appConfig } = {}) => {
 
@@ -23,15 +24,12 @@ export default ({ production, coverage, appConfig } = {}) => {
     // when running a coverage build we want to add the istanbul transform to add in instrumentation
 
     if (coverage) {
-
-        babelConfig.plugins.push(
-            ['istanbul', { exclude: ['node_modules'] }],
-        );
-
+        babelConfig.plugins.push(['istanbul', { exclude: ['node_modules'] }]);
     }
 
     const rules = [
-        {   // js pipeline
+        {
+            // js pipeline
             test: /\.js$/,
             exclude: /(node_modules)/,
             use: {
@@ -39,58 +37,70 @@ export default ({ production, coverage, appConfig } = {}) => {
                 options: babelConfig,
             },
         },
-        {   // css pipeline
+        {
+            // css pipeline
             test: /\.css$/,
             use: extractCss.extract({
-                use: ['css-loader?modules=true&importLoaders=1&localIdentName=[hash:base64:5]', 'postcss-loader'],
+                use: [
+                    'css-loader?modules=true&importLoaders=1&localIdentName=[hash:base64:5]',
+                    'postcss-loader',
+                ],
             }),
         },
-        {   // other assets
+        {
+            // other assets
             test: /\.(jpe?g|png|gif|svg|eot|ttf|woff|woff2)$/,
             use: `file-loader?name=${ASSET_NAME_TEMPLATE}`,
         },
     ];
 
+    const pwaManifest = new WebpackPwaManifest({
+        name: 'Ultra rare youtube app',
+        short_name: 'PreactTube',
+        description: 'The rarest of youtube apps',
+        background_color: '#eee',
+        theme_color: '#673ab8',
+        display: 'standalone',
+        start_url: '/',
+        icons: [{
+            src: path.resolve('meta/icon.png'),
+            sizes: [96, 128, 192, 256, 384, 512],
+        }],
+
+        inject: false,
+    });
+
     const plugins = [
+
+        new DefinePlugin({
+            YOUTUBE_API_KEY: JSON.stringify(appConfig.youtubeKey),
+        }),
+
+        pwaManifest,
 
         new HtmlWebpackPlugin({
             template: './index.ejs',
             minify: { collapseWhitespace: true },
-        }),
-
-        new DefinePlugin({
-            'YOUTUBE_API_KEY': JSON.stringify(appConfig.youtubeKey),
+            manifest: pwaManifest.options,
         }),
 
         extractCss,
-
     ];
 
     if (production) {
-
         plugins.push(
             new DefinePlugin({
                 'process.env': {
                     NODE_ENV: 'production',
                 },
             }),
-            new CommonsChunkPlugin({
-                name: 'vendor',
-                minChunks: ({ resource }) => /node_modules/.test(resource),
-            }),
             new UglifyJsPlugin(),
         );
-
     } else {
-
-        plugins.push(
-            new NamedModulesPlugin(),
-        );
-
+        plugins.push(new NamedModulesPlugin());
     }
 
     return {
-
         context: path.resolve(__dirname, 'src'),
 
         entry: './index.js',
@@ -113,7 +123,5 @@ export default ({ production, coverage, appConfig } = {}) => {
         },
 
         devtool: 'source-map',
-
     };
-
 };
