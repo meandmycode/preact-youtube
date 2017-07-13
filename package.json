@@ -32,6 +32,7 @@
     "nyc": "^11.0.3",
     "postcss-loader": "^2.0.6",
     "preact-render-to-string": "^3.6.3",
+    "rimraf": "^2.6.1",
     "selenium-webdriver": "^3.4.0",
     "webpack": "^3.0.0",
     "webpack-dev-middleware": "^1.11.0",
