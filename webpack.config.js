@@ -4,6 +4,8 @@ import { DefinePlugin, NamedModulesPlugin, optimize } from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import WebpackPwaManifest from 'webpack-pwa-manifest';
+import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
+import BabiliPlugin from 'babili-webpack-plugin';
 
 const { UglifyJsPlugin } = optimize;
 
@@ -94,7 +96,9 @@ export default ({ production, coverage, appConfig } = {}) => {
                     NODE_ENV: 'production',
                 },
             }),
-            new UglifyJsPlugin(),
+            new UglifyJsPlugin({ sourceMap: true }),
+            new BabiliPlugin(),
+            new OptimizeCssAssetsPlugin(),
         );
     } else {
         plugins.push(new NamedModulesPlugin());

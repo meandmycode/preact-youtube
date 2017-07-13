@@ -1,5 +1,3 @@
-import { toArray, skip, take } from './iteration-utils';
-
 export default class Buffer {
 
     done = false;
@@ -10,13 +8,26 @@ export default class Buffer {
         this.source = source;
     }
 
-    slice(start, end) {
+    async slice(start, end) {
 
         if (this.done || this.items.length >= end){
             return this.items.slice(start, end);
         }
 
-        return toArray(take(skip(this, start), end - start));
+        const results = [];
+
+        let i = 0;
+
+        // https://github.com/babel/babel-eslint/issues/415
+        // eslint-disable-next-line semi
+        for await (const item of this) {
+            if (start > i++) continue;
+            if (i === end) break;
+
+            results.push(item);
+        }
+
+        return results;
 
     }
 

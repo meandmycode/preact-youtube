@@ -15,7 +15,6 @@ const gettyget = (uri, { cancellation, progress } = {}) => new Promise((resolve,
 
     xhr.onerror = () => reject();
 
-
     xhr.onload = () => {
 
         if (cancellation.canceled) return reject();
