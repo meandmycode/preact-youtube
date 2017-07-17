@@ -41,11 +41,14 @@
   },
   "dependencies": {
     "core-js": "^2.4.1",
+    "css-modules-require-hook": "^4.0.6",
     "es6-promise": "^4.1.1",
+    "minimist": "^1.2.0",
     "preact": "^8.1.0",
     "preact-compat": "^3.16.0",
     "preact-router": "^2.5.2",
-    "regenerator-runtime": "^0.10.5"
+    "regenerator-runtime": "^0.10.5",
+    "request": "^2.81.0"
   },
   "scripts": {
     "start": "node_modules/.bin/babel-node -- scripts/server",
