@@ -5,7 +5,7 @@ import { shortDateFormatter } from '../../utils/formatting';
 import { getVideoUrl, getPlaylistUrl, createReferrerUrl } from '../../utils/routing';
 
 import MediaQuery from '../media-query';
-import StreamingList from '../streaming-list';
+import StreamingList, { StaticList } from '../streaming-list';
 import RichText from '../rich-text';
 
 import styles from './style.css';
@@ -13,26 +13,29 @@ import styles from './style.css';
 const getItemUrl = (playlist, video) => createReferrerUrl(getVideoUrl(video), getPlaylistUrl(playlist));
 const getVideoThumbnail = (video, matches) => video.snippet.thumbnails ? video.snippet.thumbnails[matches ? 'medium' : 'high'].url : null;
 
+export const PlaylistItem = ({ video, playlist, mobile }) => (
+
+    <div class={styles.item} mobile={mobile ? '' : null} component='video'>
+        <div class={styles.details}>
+            <Link class={styles.title} part='title' href={getItemUrl(playlist, video)}>{video.snippet.title}</Link>
+            <div class={styles.published} part='published'>Published on {shortDateFormatter.format(video.snippet.publishedAt)}</div>
+            <RichText class={styles.description} part='description' text={video.snippet.description} />
+        </div>
+        <Link class={styles.thumbnail}
+            part='thumbnail'
+            title={video.snippet.title}
+            href={getItemUrl(playlist, video)}
+            src={getVideoThumbnail(video, mobile)}
+            style={`background-image: url(${getVideoThumbnail(video, mobile)})`}
+        />
+    </div>
+);
+
 class Playlist extends Component {
 
     update({ playlist, matches }) {
 
-        const itemTemplate = video => (
-            <div class={styles.item} mobile={matches ? '' : null} component='video'>
-                <div class={styles.details}>
-                    <Link class={styles.title} part='title' href={getItemUrl(playlist, video)}>{video.snippet.title}</Link>
-                    <div class={styles.published} part='published'>Published on {shortDateFormatter.format(video.snippet.publishedAt)}</div>
-                    <RichText class={styles.description} part='description' text={video.snippet.description} />
-                </div>
-                <Link class={styles.thumbnail}
-                    part='thumbnail'
-                    title={video.snippet.title}
-                    href={getItemUrl(playlist, video)}
-                    src={getVideoThumbnail(video, matches)}
-                    style={`background-image: url(${getVideoThumbnail(video, matches)})`}
-                />
-            </div>
-        );
+        const itemTemplate = video => <PlaylistItem video={video} playlist={playlist} mobile={matches} />;
 
         const itemHeight = matches ? 300 : 198;
 
@@ -49,25 +52,51 @@ class Playlist extends Component {
         this.update(nextProps);
     }
 
-    shouldComponentUpdate = ({ position }, { itemTemplate, itemHeight }) =>
-        this.props.position !== position ||
-        this.state.itemTemplate !== itemTemplate ||
-        this.state.itemHeight !== itemHeight;
+    shouldComponentUpdate({ position }, { itemTemplate, itemHeight }) {
 
-    render = ({ playlist, position, onPositionChange }, { itemTemplate, itemHeight }) => (
-        <div class={styles.playlist} component='playlist'>
-            <StreamingList
-                part='items'
-                source={playlist.items}
-                total={playlist.total}
-                position={position}
-                itemTemplate={itemTemplate}
-                itemHeight={itemHeight}
-                itemGutter={20}
-                onPositionChange={onPositionChange}
-            />
-        </div>
-    );
+        const shouldUpdate =
+            this.props.position !== position ||
+            this.state.itemTemplate !== itemTemplate ||
+            this.state.itemHeight !== itemHeight;
+
+        return shouldUpdate;
+    }
+
+    render({ playlist, position, onPositionChange }, { itemTemplate, itemHeight }) {
+
+        const isSync = Array.isArray(playlist.items);
+
+        if (isSync) {
+
+            return (
+                <div class={styles.playlist} component='playlist'>
+                    <StaticList
+                        part='items'
+                        items={playlist.items}
+                        itemTemplate={itemTemplate}
+                        itemHeight={itemHeight}
+                        itemGutter={20}
+                    />
+                </div>
+            );
+
+        }
+
+        return (
+            <div class={styles.playlist} component='playlist'>
+                <StreamingList
+                    part='items'
+                    source={playlist.items}
+                    total={playlist.total}
+                    position={position}
+                    itemTemplate={itemTemplate}
+                    itemHeight={itemHeight}
+                    itemGutter={20}
+                    onPositionChange={onPositionChange}
+                />
+            </div>
+        );
+    }
 }
 
 export default props => (
