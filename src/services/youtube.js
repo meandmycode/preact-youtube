@@ -4,39 +4,12 @@ import JsonNormalizingVisitor from '../utils/json-normalizing-visitor';
 
 const normalizer = new JsonNormalizingVisitor();
 
-const gettyget = (uri, { cancellation, progress } = {}) => new Promise((resolve, reject) => {
-
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', uri);
-
-    xhr.onprogress = progress;
-    xhr.onloadstart = progress;
-    xhr.onloadend = progress;
-
-    xhr.onerror = () => reject();
-
-    xhr.onload = () => {
-
-        if (cancellation.canceled) return reject();
-
-        const json = JSON.parse(xhr.responseText);
-        const normalized = normalizer.visit(json);
-
-        resolve(normalized);
-
-    };
-
-    cancellation.addListener(() => xhr.abort());
-
-    xhr.send();
-
-});
-
 export const defaultBaseUri = 'https://www.googleapis.com/youtube/v3';
 
 export default class YoutubeService {
 
-    constructor(key, baseUri = defaultBaseUri) {
+    constructor(getter, key, baseUri = defaultBaseUri) {
+        this.getter = getter;
         this.baseUri = baseUri;
         this.baseParameters = { key };
     }
@@ -45,10 +18,12 @@ export default class YoutubeService {
         return joinPaths(this.baseUri, path) + serialize({ ...this.baseParameters, ...parameters });
     }
 
-    getResource(path, parameters, options) {
+    async getResource(path, parameters, options) {
 
         const uri = this.getUri(path, parameters);
-        return gettyget(uri, options);
+        const json = await this.getter.get(uri, options);
+
+        return normalizer.visit(json);
 
     }
 
