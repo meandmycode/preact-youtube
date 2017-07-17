@@ -44,8 +44,7 @@ export default ({ production, coverage, appConfig } = {}) => {
             test: /\.css$/,
             use: extractCss.extract({
                 use: [
-                    'css-loader?modules=true&importLoaders=1&localIdentName=[hash:base64:5]',
-                    'postcss-loader',
+                    'css-loader?modules&localIdentName=[hash:base64:5]',
                 ],
             }),
         },
