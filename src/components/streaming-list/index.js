@@ -147,3 +147,20 @@ export default class StreamingList extends Component {
         );
     }
 }
+
+export const StaticList = ({ items, itemTemplate, itemHeight, itemGutter, ...props }) => {
+
+    const maximumHeight =  getHeightForCount(itemHeight, itemGutter, items.length);
+
+    return (
+        <div style={`${STYLE_INNER}`} {...props}>
+            <div style={`${STYLE_CONTENT};height: ${(maximumHeight + itemGutter)}px;transform: translateY(0)`}>
+                {items.map((item, i) => (
+                    <div key={i} style={`height: ${itemHeight}px;margin-top: ${itemGutter}px`}>
+                        {itemTemplate(item)}
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
