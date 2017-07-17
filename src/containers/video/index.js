@@ -21,7 +21,7 @@ export default class VideoView extends Component {
 
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.updateVideo(this.props);
     }
 

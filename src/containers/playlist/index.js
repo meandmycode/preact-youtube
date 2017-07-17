@@ -22,7 +22,7 @@ export default class PlaylistView extends Component {
 
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.updatePlaylist(this.props);
     }
 
