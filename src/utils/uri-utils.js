@@ -11,15 +11,11 @@ export const joinPaths = (...parts) => parts.reduce((a, b) => {
 
 export const parse = str => {
 
-    const anchor = document.createElement('a');
-    anchor.href = str;
+    const match = str.match(/(.+)(\?.+)/);
 
-    let { pathname, search } = anchor;
-
-    // devnote: ie quirk with non-leading slash on pathname
-    if (pathname[0] !== '/') pathname = '/' + pathname;
-
-    const query = deserialize(search);
+    const pathname = match ? match[1] : str;
+    const search = match ? match[2] : null;
+    const query = search ? deserialize(search) : {};
 
     return {
         pathname,
