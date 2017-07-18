@@ -1,5 +1,6 @@
 /* global process */
 import './css-hook';
+import 'regenerator-runtime/runtime';
 import fs from 'fs';
 import minimist from 'minimist';
 import request from 'request';
@@ -7,17 +8,17 @@ import express from 'express';
 import render from 'preact-render-to-string';
 import { h } from 'preact';
 
-import NodeHttpGetter from '../src/services/node-http-getter';
-import YoutubeService from '../src/services/youtube';
+import NodeHttpGetter from './services/node-http-getter';
+import YoutubeService from './services/youtube';
 
-import Shell from '../src/components/shell';
-import Playlist from '../src/components/playlist';
-import Video from '../src/components/video';
+import Shell from './components/shell';
+import Playlist from './components/playlist';
+import Video from './components/video';
 
 const args = minimist(process.argv.slice(2));
 const env = process.env;
 
-const hostHtml = fs.readFileSync('dist/index.html');
+const hostHtml = fs.readFileSync('dist/client/index.html');
 const insertPosition = hostHtml.indexOf('<noscript>');
 
 const host = args.host || env.HOST || '0.0.0.0';
@@ -58,7 +59,7 @@ const youtubeService = new YoutubeService(getter, youtubeApiKey);
 
 const app = express();
 
-app.use(express.static('dist'));
+app.use(express.static('dist/client'));
 
 app.get('/p/:playlistId', wrap(async (req, res) => {
 
