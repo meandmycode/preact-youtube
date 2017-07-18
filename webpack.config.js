@@ -9,9 +9,8 @@ import BabiliPlugin from 'babili-webpack-plugin';
 
 const { UglifyJsPlugin } = optimize;
 
-export default ({ production, coverage, appConfig } = {}) => {
+export default ({ production, coverage, outputPath, appConfig } = {}) => {
 
-    const outputPath = 'dist';
     const ASSET_NAME_TEMPLATE = '[name]-[hash:6].[ext]';
 
     const extractCss = new ExtractTextPlugin({
@@ -116,7 +115,7 @@ export default ({ production, coverage, appConfig } = {}) => {
 
         output: {
             publicPath: '/',
-            path: path.resolve(outputPath),
+            path: outputPath ? path.resolve(outputPath) : undefined,
             filename: ASSET_NAME_TEMPLATE.replace('[ext]', 'js'),
             chunkFilename: '[name]-[chunkhash].js',
         },
