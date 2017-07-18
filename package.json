@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Probably the best youtube app ever made",
   "devDependencies": {
-    "autoprefixer": "^7.1.1",
-    "ava": "^0.20.0",
+    "autoprefixer": "^7.1.2",
+    "ava": "^0.21.0",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
@@ -15,18 +15,18 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
-    "babel-preset-env": "^1.5.2",
+    "babel-preset-env": "^1.6.0",
     "babili-webpack-plugin": "^0.1.2",
-    "chai": "^4.0.2",
+    "chai": "^4.1.0",
     "chai-string": "^1.4.0",
     "chromedriver": "^2.30.1",
     "css-loader": "^0.28.4",
     "cucumber": "^2.3.1",
-    "eslint": "^4.1.1",
+    "eslint": "4.1.1",
     "eslint-plugin-import": "^2.6.1",
     "eslint-plugin-react": "^7.1.0",
     "express": "^4.15.3",
-    "extract-text-webpack-plugin": "^2.1.2",
+    "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^0.11.2",
     "html-webpack-plugin": "^2.29.0",
     "http-proxy": "^1.16.2",
@@ -35,35 +35,43 @@
     "preact-render-to-string": "^3.6.3",
     "rimraf": "^2.6.1",
     "selenium-webdriver": "^3.4.0",
-    "webpack": "^3.0.0",
+    "webpack": "^3.3.0",
     "webpack-dev-middleware": "^1.11.0",
-    "webpack-pwa-manifest": "^3.1.0"
+    "webpack-pwa-manifest": "^3.1.2"
   },
   "dependencies": {
     "core-js": "^2.4.1",
     "css-modules-require-hook": "^4.0.6",
     "es6-promise": "^4.1.1",
     "minimist": "^1.2.0",
-    "preact": "^8.1.0",
+    "preact": "^8.2.1",
     "preact-compat": "^3.16.0",
-    "preact-router": "^2.5.2",
+    "preact-router": "^2.5.5",
     "regenerator-runtime": "^0.10.5",
     "request": "^2.81.0"
   },
   "scripts": {
-    "start": "node_modules/.bin/babel-node -- scripts/server",
-    "debug": "node_modules/.bin/babel-node -- scripts/dev-server",
-    "build": "node_modules/.bin/babel-node -- scripts/build",
-    "lint": "node_modules/.bin/eslint .",
-    "unit": "node_modules/.bin/nyc node_modules/.bin/ava",
-    "e2e": "node_modules/.bin/babel-node -- node_modules/cucumber/bin/cucumber.js",
-    "test": "npm run lint && npm run unit && npm run e2e"
+    "start": "node dist/server/server.js",
+    "debug": "npx babel-node scripts/dev-server",
+    "prebuild": "npx rimraf dist",
+    "build": "npm run build-client && npm run build-server",
+    "build-client": "npx babel-node scripts/build --out-dir dist/client",
+    "build-server": "npx babel src --out-dir dist/server --copy-files",
+    "lint": "npx eslint .",
+    "unit": "npx nyc npx ava",
+    "e2e": "npx babel-node -- node_modules/cucumber/bin/cucumber.js",
+    "test": "npm run lint && npm run unit && npm run e2e",
+    "heroku-postbuild": "npm run build"
   },
   "ava": {
     "require": "babel-register",
     "babel": {
       "babelrc": true
     }
+  },
+  "engines": {
+    "node": "^8.1.0",
+    "npm": "^5.3.0"
   },
   "maintainers": [
     "Stephen Taylor <meandmycode@gmail.com> (meandmycode.com)"
