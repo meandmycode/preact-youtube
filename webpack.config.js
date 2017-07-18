@@ -80,6 +80,7 @@ export default ({ production, coverage, outputPath, appConfig } = {}) => {
 
         new HtmlWebpackPlugin({
             template: './index.ejs',
+            inject: false,
             minify: { collapseWhitespace: true },
             manifest: pwaManifest.options,
         }),
