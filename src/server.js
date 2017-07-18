@@ -59,8 +59,6 @@ const youtubeService = new YoutubeService(getter, youtubeApiKey);
 
 const app = express();
 
-app.use(express.static('dist/client'));
-
 app.get('/p/:playlistId', wrap(async (req, res) => {
 
     const playlistId = req.params.playlistId;
@@ -90,6 +88,8 @@ app.get('/v/:videoId', wrap(async (req, res) => {
     view(res, <Video video={video} />);
 
 }));
+
+app.use(express.static('dist/client'));
 
 app.listen(port, host, err => {
 
