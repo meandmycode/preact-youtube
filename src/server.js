@@ -69,7 +69,7 @@ const getPlaylist = async playlistId => {
     const total = playlist.pageInfo.totalResults;
     const items = playlist.items;
 
-    const source = { items, total };
+    const source = { playlistId, items, total };
 
     return <Playlist playlist={source} />;
 
