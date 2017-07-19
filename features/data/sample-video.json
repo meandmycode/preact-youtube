@@ -11,9 +11,6 @@
       "description": "Probably the best video in the world.",
       "thumbnails": {
         "medium": {
-          "url": "https://fake-static-domain/sm-swanky.jpg"
-        },
-        "high": {
           "url": "https://fake-static-domain/swanky.jpg"
         }
       }

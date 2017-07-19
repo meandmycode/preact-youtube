@@ -61,12 +61,12 @@ Feature: Playlist
         And I navigate to "/p/sample-playlist"
         Then I see a list of videos:
         | title           | published    | thumbnail             | summary |
-        | Swanky McSwanks | Mar 18, 1985 | sm-swanky.jpg         |         |
-        | Harambe         | May 29, 2016 | sm-big-ole-monkey.jpg |         |
-        # | Damn daniel     | Feb 21, 2016 | sm-white-vans.jpg     |         |
-        # | Sad Ben Affleck | Mar 25, 2016 | sm-mixed-response.jpg |         |
-        # | Relatable       | Jul 27, 2016 | sm-arthurs-fist.jpg   |         |
-        # | Harold          | Oct 23, 2011 | sm-hide-the-pain.jpg  |         |
+        | Swanky McSwanks | Mar 18, 1985 | swanky.jpg         |         |
+        | Harambe         | May 29, 2016 | big-ole-monkey.jpg |         |
+        # | Damn daniel     | Feb 21, 2016 | white-vans.jpg     |         |
+        # | Sad Ben Affleck | Mar 25, 2016 | mixed-response.jpg |         |
+        # | Relatable       | Jul 27, 2016 | arthurs-fist.jpg   |         |
+        # | Harold          | Oct 23, 2011 | hide-the-pain.jpg  |         |
 
     Scenario: On mobile I can click the title of a video to navigate to the detail view
         And I have a mobile device
