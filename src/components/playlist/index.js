@@ -14,7 +14,6 @@ const getItemUrl = (playlist, video) => createReferrerUrl(getVideoUrl(video), ge
 const getVideoThumbnail = (video, matches) => video.snippet.thumbnails ? video.snippet.thumbnails[matches ? 'medium' : 'high'].url : null;
 
 export const PlaylistItem = ({ video, playlist, mobile }) => (
-
     <div class={styles.item} mobile={mobile ? '' : null} component='video'>
         <div class={styles.details}>
             <Link class={styles.title} part='title' href={getItemUrl(playlist, video)}>{video.snippet.title}</Link>
