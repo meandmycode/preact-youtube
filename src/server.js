@@ -59,9 +59,7 @@ const youtubeService = new YoutubeService(getter, youtubeApiKey);
 
 const app = express();
 
-app.get('/p/:playlistId', wrap(async (req, res) => {
-
-    const playlistId = req.params.playlistId;
+const getPlaylist = async playlistId => {
 
     const playlist = await youtubeService.getPlaylist(playlistId, {
         maxResults: 10,
@@ -73,7 +71,15 @@ app.get('/p/:playlistId', wrap(async (req, res) => {
 
     const source = { items, total };
 
-    view(res, <Playlist playlist={source} />);
+    return <Playlist playlist={source} />;
+
+};
+
+app.get('/p/:playlistId', wrap(async (req, res) => {
+
+    const playlist = await getPlaylist(req.params.playlistId);
+
+    view(res, playlist);
 
 }));
 
@@ -86,6 +92,22 @@ app.get('/v/:videoId', wrap(async (req, res) => {
     });
 
     view(res, <Video video={video} />);
+
+}));
+
+app.get('/baby-legs', wrap(async (req, res) => {
+
+    const playlist = await getPlaylist('PLNu47mcqeyiATtjW5pIRWlpXBu4pUezdP');
+
+    view(res, playlist);
+
+}));
+
+app.get('/', wrap(async (req, res) => {
+
+    const playlist = await getPlaylist('PLSi28iDfECJPJYFA4wjlF5KUucFvc0qbQ');
+
+    view(res, playlist);
 
 }));
 
