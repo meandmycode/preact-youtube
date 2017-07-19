@@ -18,10 +18,6 @@
 	<link rel="manifest" href="<%= htmlWebpackPlugin.options.manifest.filename %>">
 </head>
 <body>
-    <noscript>
-        <p>This might be the sadest youtube app running without its beloved JavaScript.</p>
-        <p><a href="https://www.google.co.uk/search?q=how+do+i+enable+javascript" target="_blank">Enable JavaScript</a></p>
-    </noscript>
 	<% for (var item of htmlWebpackPlugin.files.js) { %>
 		<script src="<%= item %>" defer></script>
 	<% } %>
