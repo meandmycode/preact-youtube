@@ -19,7 +19,7 @@ const args = minimist(process.argv.slice(2));
 const env = process.env;
 
 const hostHtml = fs.readFileSync('dist/client/index.html');
-const insertPosition = hostHtml.indexOf('<noscript>');
+const insertPosition = hostHtml.indexOf('</body>');
 
 const host = args.host || env.HOST || '0.0.0.0';
 const port = args.port || env.PORT || 9001;
