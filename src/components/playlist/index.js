@@ -11,7 +11,6 @@ import RichText from '../rich-text';
 import styles from './style.css';
 
 const getItemUrl = (playlist, video) => createReferrerUrl(getVideoUrl(video), getPlaylistUrl(playlist));
-const getVideoThumbnail = video => video.snippet.thumbnails ? video.snippet.thumbnails.medium.url : undefined;
 
 export const PlaylistItem = ({ video, playlist, mobile }) => (
     <div class={styles.item} mobile={mobile ? '' : null} component='video'>
@@ -24,8 +23,8 @@ export const PlaylistItem = ({ video, playlist, mobile }) => (
             part='thumbnail'
             title={video.snippet.title}
             href={getItemUrl(playlist, video)}
-            src={getVideoThumbnail(video, mobile)}
-            style={`background-image: url(${getVideoThumbnail(video, mobile)})`}
+            src={video.snippet.thumbnails ? video.snippet.thumbnails.medium.url : undefined}
+            style={video.snippet.thumbnails ? `background-image: url(${video.snippet.thumbnails.medium.url})` : undefined}
         />
     </div>
 );
