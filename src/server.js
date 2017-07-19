@@ -5,6 +5,7 @@ import fs from 'fs';
 import minimist from 'minimist';
 import request from 'request';
 import express from 'express';
+import shrinkRay from 'shrink-ray';
 import render from 'preact-render-to-string';
 import { h } from 'preact';
 
@@ -18,7 +19,7 @@ import Video from './components/video';
 const args = minimist(process.argv.slice(2));
 const env = process.env;
 
-const hostHtml = fs.readFileSync('dist/client/index.html');
+const hostHtml = fs.readFileSync('dist/client/spa.html');
 const insertPosition = hostHtml.indexOf('</body>');
 
 const host = args.host || env.HOST || '0.0.0.0';
@@ -57,8 +58,6 @@ const getter = new NodeHttpGetter(proxyHost && proxyPort ? request.defaults({ pr
 
 const youtubeService = new YoutubeService(getter, youtubeApiKey);
 
-const app = express();
-
 const getPlaylist = async playlistId => {
 
     const playlist = await youtubeService.getPlaylist(playlistId, {
@@ -74,6 +73,10 @@ const getPlaylist = async playlistId => {
     return <Playlist playlist={source} />;
 
 };
+
+const app = express();
+
+app.use(shrinkRay());
 
 app.get('/p/:playlistId', wrap(async (req, res) => {
 

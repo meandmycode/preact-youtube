@@ -20,11 +20,9 @@ app.use(webpackDevMiddleware(compiler, {
     },
 }));
 
-app.use((req, res, next) => {
+app.use((req, res) => {
 
-    if (req.path === '/') return next();
-
-    req.url = '/';
+    req.url = '/spa.html';
 
     app(req, res);
 
