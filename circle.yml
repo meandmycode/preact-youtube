@@ -17,10 +17,3 @@ compile:
 general:
   artifacts:
     - dist
-
-deployment:
-  production:
-    branch: master
-    commands:
-      - npm install -g firebase-tools
-      - firebase deploy --token=$FIREBASE_TOKEN --non-interactive
