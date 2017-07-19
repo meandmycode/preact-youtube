@@ -17,9 +17,7 @@ defineSupportCode(({ Given, When, Then, After }) => {
 
     When('I navigate to {stringInDoubleQuotes}', { timeout: 20000 }, async function(path) {
 
-        const { driver, initializing, baseUri } = this;
-
-        await initializing;
+        const { driver, baseUri } = this;
 
         await driver.get(baseUri + path);
 

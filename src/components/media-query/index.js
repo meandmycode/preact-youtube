@@ -19,7 +19,7 @@ export default class MediaProxy extends Component {
 
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.updateQuery(this.props.query);
     }
 

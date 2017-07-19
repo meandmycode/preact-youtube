@@ -9,9 +9,8 @@ import BabiliPlugin from 'babili-webpack-plugin';
 
 const { UglifyJsPlugin } = optimize;
 
-export default ({ production, coverage, appConfig } = {}) => {
+export default ({ production, coverage, outputPath, appConfig } = {}) => {
 
-    const outputPath = 'dist';
     const ASSET_NAME_TEMPLATE = '[name]-[hash:6].[ext]';
 
     const extractCss = new ExtractTextPlugin({
@@ -44,8 +43,7 @@ export default ({ production, coverage, appConfig } = {}) => {
             test: /\.css$/,
             use: extractCss.extract({
                 use: [
-                    'css-loader?modules=true&importLoaders=1&localIdentName=[hash:base64:5]',
-                    'postcss-loader',
+                    'css-loader?modules&localIdentName=[hash:base64:5]',
                 ],
             }),
         },
@@ -82,7 +80,8 @@ export default ({ production, coverage, appConfig } = {}) => {
 
         new HtmlWebpackPlugin({
             template: './index.ejs',
-            minify: { collapseWhitespace: true },
+            inject: false,
+            minify: { collapseWhitespace: true, collapseBooleanAttributes: true },
             manifest: pwaManifest.options,
         }),
 
@@ -117,7 +116,7 @@ export default ({ production, coverage, appConfig } = {}) => {
 
         output: {
             publicPath: '/',
-            path: path.resolve(outputPath),
+            path: outputPath ? path.resolve(outputPath) : undefined,
             filename: ASSET_NAME_TEMPLATE.replace('[ext]', 'js'),
             chunkFilename: '[name]-[chunkhash].js',
         },

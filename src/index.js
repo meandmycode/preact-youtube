@@ -5,4 +5,6 @@ import 'regenerator-runtime/runtime';
 import { h, render } from 'preact';
 import App from './containers/app';
 
-render(<App />, document.body);
+const serverElement = document.querySelector('div');
+
+render(<App />, document.body, serverElement);

@@ -4,6 +4,7 @@ import Webdriver from 'selenium-webdriver';
 import WebdriverProxy from 'selenium-webdriver/proxy';
 import 'chromedriver';
 
+import cp from 'child_process';
 import net from 'net';
 import http from 'http';
 import https from 'https';
@@ -12,24 +13,42 @@ import express from 'express';
 import chai from 'chai';
 import chaiString from 'chai-string';
 
-import httpServer from '../../scripts/http-server';
 import devices from './devices.json';
 import * as proxyConfig from './proxy';
 
 chai.use(chaiString);
 chai.should();
 
-const hostname = process.env.HOST || 'localhost';
-const port = process.env.HTTP_PORT || 9001;
+function sleep(time) {
+    const stop = new Date().getTime();
+    while (new Date().getTime() < stop + time);
+}
+
+const appHostname = process.env.APP_HOST || 'localhost';
+const appPort = process.env.APP_PORT || 9001;
 const proxyPort = process.env.PROXY_HTTP_PORT || 9888;
 const proxyTlsPort = process.env.PROXY_HTTPS_PORT || 9898;
 
-const host = `${hostname}:${port}`;
+const host = `${appHostname}:${appPort}`;
 const baseUri = `http://${host}`;
 
-const interceptorServer = httpProxy.createProxyServer();
+cp.spawn('npm', [
+    'start',
+    '--',
+    `--port=${appPort}`,
+    `--proxyHost=${appHostname}`,
+    `--proxyPort=${proxyPort}`,
+    '--allowInsecureTls=true',
+], {
+    shell: true,
+});
 
-httpServer.listen(port, hostname);
+// devnote: this is horrible, but we can't stall cucumber from
+// running scenarios and we need a little time for our server
+// to start
+sleep(1000);
+
+const interceptorServer = httpProxy.createProxyServer();
 
 const createProxy = () => {
 
@@ -37,7 +56,7 @@ const createProxy = () => {
 
     proxyApp.use((req, res, next) => {
 
-        if (req.hostname === hostname) {
+        if (req.hostname === appHostname) {
             return interceptorServer.web(req, res, { target: baseUri });
         }
 
@@ -53,7 +72,7 @@ const createProxy = () => {
 
     proxyHttpServer.on('connect', (req, socket) => {
 
-        const relaySocket = net.connect(proxyTlsPort, hostname, () => {
+        const relaySocket = net.connect(proxyTlsPort, appHostname, () => {
 
             socket.write(
                 'HTTP/1.1 200 Connection Established\r\n' +
@@ -89,20 +108,16 @@ const normalizeCapabilities = ({ deviceEmulation, ...etc }) => {
 
 const createDriver = capabilities => new Webdriver.Builder()
     .withCapabilities({ [Webdriver.Capability.ACCEPT_SSL_CERTS]: true, ...normalizeCapabilities(capabilities) })
-    .setProxy(WebdriverProxy.manual({ http: `${hostname}:${proxyPort}`, https: `${hostname}:${proxyPort}` }))
+    .setProxy(WebdriverProxy.manual({ http: `${appHostname}:${proxyPort}`, https: `${appHostname}:${proxyPort}` }))
     .build();
 
 //
-
-const initializing = new Promise(resolve => setTimeout(resolve, 5000));
 
 class World {
     baseUri = baseUri;
     createProxy = createProxy;
     createDriver = createDriver;
-    httpServer = httpServer;
     devices = devices;
-    initializing = initializing;
 }
 
 defineSupportCode(({ setWorldConstructor }) => setWorldConstructor(World));

@@ -1,9 +1,10 @@
 machine:
   node:
-    version: 8.1.3
+    version: 8.1.4
 
 dependencies:
   pre:
+    - npm i -g npm
     - curl -L -o google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
     - sudo dpkg -i google-chrome.deb
     - sudo sed -i 's|HERE/chrome\"|HERE/chrome\" --disable-setuid-sandbox|g' /opt/google/chrome/google-chrome
@@ -16,10 +17,3 @@ compile:
 general:
   artifacts:
     - dist
-
-deployment:
-  production:
-    branch: master
-    commands:
-      - npm install -g firebase-tools
-      - firebase deploy --token=$FIREBASE_TOKEN --non-interactive

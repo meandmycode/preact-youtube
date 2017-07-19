@@ -21,11 +21,12 @@ export default class VideoView extends Component {
 
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.updateVideo(this.props);
     }
 
     componentWillReceiveProps(newProps) {
+        if (newProps.videoId === this.props.videoId) return;
         this.updateVideo(newProps);
     }
 
