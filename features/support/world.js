@@ -19,6 +19,11 @@ import * as proxyConfig from './proxy';
 chai.use(chaiString);
 chai.should();
 
+function sleep(time) {
+    const stop = new Date().getTime();
+    while (new Date().getTime() < stop + time);
+}
+
 const appHostname = process.env.APP_HOST || 'localhost';
 const appPort = process.env.APP_PORT || 9001;
 const proxyPort = process.env.PROXY_HTTP_PORT || 9888;
@@ -37,6 +42,11 @@ cp.spawn('npm', [
 ], {
     shell: true,
 });
+
+// devnote: this is horrible, but we can't stall cucumber from
+// running scenarios and we need a little time for our server
+// to start
+sleep(1000);
 
 const interceptorServer = httpProxy.createProxyServer();
 
