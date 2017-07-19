@@ -11,7 +11,7 @@ import RichText from '../rich-text';
 import styles from './style.css';
 
 const getItemUrl = (playlist, video) => createReferrerUrl(getVideoUrl(video), getPlaylistUrl(playlist));
-const getVideoThumbnail = (video, matches) => video.snippet.thumbnails ? video.snippet.thumbnails[matches ? 'medium' : 'high'].url : null;
+const getVideoThumbnail = video => video.snippet.thumbnails ? video.snippet.thumbnails.medium.url : undefined;
 
 export const PlaylistItem = ({ video, playlist, mobile }) => (
     <div class={styles.item} mobile={mobile ? '' : null} component='video'>
