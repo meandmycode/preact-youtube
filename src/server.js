@@ -19,7 +19,7 @@ import Video from './components/video';
 const args = minimist(process.argv.slice(2));
 const env = process.env;
 
-const hostHtml = fs.readFileSync('dist/client/index.html');
+const hostHtml = fs.readFileSync('dist/client/spa.html');
 const insertPosition = hostHtml.indexOf('</body>');
 
 const host = args.host || env.HOST || '0.0.0.0';

@@ -6,6 +6,7 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import WebpackPwaManifest from 'webpack-pwa-manifest';
 import OptimizeCssAssetsPlugin from 'optimize-css-assets-webpack-plugin';
 import BabiliPlugin from 'babili-webpack-plugin';
+import ServiceWorkerWebpackPlugin from 'serviceworker-webpack-plugin';
 
 const { UglifyJsPlugin } = optimize;
 
@@ -79,13 +80,18 @@ export default ({ production, coverage, outputPath, appConfig } = {}) => {
         pwaManifest,
 
         new HtmlWebpackPlugin({
-            template: './index.ejs',
+            template: './spa.ejs',
+            filename: 'spa.html',
             inject: false,
             minify: { collapseWhitespace: true, collapseBooleanAttributes: true },
             manifest: pwaManifest.options,
         }),
 
         extractCss,
+
+        new ServiceWorkerWebpackPlugin({
+            entry: './service-worker.js',
+        }),
     ];
 
     if (production) {
@@ -106,7 +112,7 @@ export default ({ production, coverage, outputPath, appConfig } = {}) => {
     return {
         context: path.resolve(__dirname, 'src'),
 
-        entry: './index.js',
+        entry: '.',
 
         module: {
             rules,
