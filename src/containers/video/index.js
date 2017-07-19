@@ -26,6 +26,7 @@ export default class VideoView extends Component {
     }
 
     componentWillReceiveProps(newProps) {
+        if (newProps.videoId === this.props.videoId) return;
         this.updateVideo(newProps);
     }
 
