@@ -27,7 +27,7 @@ const proxyTlsPort = process.env.PROXY_HTTPS_PORT || 9898;
 const host = `${appHostname}:${appPort}`;
 const baseUri = `http://${host}`;
 
-const appProcess = cp.spawn('npm', [
+cp.spawn('npm', [
     'start',
     '--',
     `--port=${appPort}`,
@@ -79,7 +79,6 @@ const createProxy = () => {
     proxyApp.quit = () => {
         proxyHttpServer.close();
         proxyHttpsServer.close();
-        appProcess.kill();
     };
 
     return proxyApp;
