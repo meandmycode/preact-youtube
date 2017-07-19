@@ -19,7 +19,7 @@
 </head>
 <body>
 	<% for (var item of htmlWebpackPlugin.files.js) { %>
-		<script src="<%= item %>" defer></script>
+		<script src="<%= item %>" async></script>
 	<% } %>
 </body>
 </html>
