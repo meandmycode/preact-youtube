@@ -30,6 +30,7 @@
 }
 
 .title {
+    flex-shrink: 0; /* devnote: fixes an ie issues with multi-line titles */
     color: inherit;
     font-size: 20px;
     text-decoration: none;
