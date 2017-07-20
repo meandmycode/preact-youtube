@@ -63,26 +63,11 @@ class Playlist extends Component {
     render({ playlist, position, onPositionChange }, { itemTemplate, itemHeight }) {
 
         const isSync = Array.isArray(playlist.items);
-
-        if (isSync) {
-
-            return (
-                <div class={styles.playlist} component='playlist'>
-                    <StaticList
-                        part='items'
-                        items={playlist.items}
-                        itemTemplate={itemTemplate}
-                        itemHeight={itemHeight}
-                        itemGutter={20}
-                    />
-                </div>
-            );
-
-        }
+        const List = isSync ? StaticList : StreamingList;
 
         return (
             <div class={styles.playlist} component='playlist'>
-                <StreamingList
+                <List
                     part='items'
                     source={playlist.items}
                     total={playlist.total}

@@ -13,7 +13,7 @@ class Header extends Component {
 
         return (referrer
             ? <a class={styles.back} part='backlink' href={referrer.url}>Back to {referrer.type}</a>
-            : <a class={styles.home} part='homelink' href='/'>YouTube playlist</a>
+            : <a class={styles.home} part='homelink' href='/' title='PreactTube' />
         );
 
     }
@@ -21,11 +21,10 @@ class Header extends Component {
     render({ busy }) {
 
         return (
-            <div class={styles.header}>
+            <div class={styles.header} busy={busy ? '' : undefined}>
                 <nav class={styles.nav}>
                     <Match>{this.matchHandler}</Match>
                 </nav>
-                <div class={styles.knightrider} hidden={!busy} />
             </div>
         );
     }
