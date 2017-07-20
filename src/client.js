@@ -14,7 +14,7 @@ import Playlist from './containers/playlist';
 import Video from './containers/video';
 
 const youtubeService = new CachingYoutubeService(new XhrHttpGetter(), YOUTUBE_API_KEY); // eslint-disable-line no-undef
-const defaultPlaylistId = 'PLSi28iDfECJPJYFA4wjlF5KUucFvc0qbQ';
+const defaultPlaylistId = 'LLKtLy-jPPl11MLGLgkRwQGQ';
 
 class App extends Component {
 
@@ -47,7 +47,6 @@ class App extends Component {
                 <Router>
                     <Playlist path='/p/:playlistId' youtubeService={youtubeService} onProgress={this.handleProgress} />
                     <Video path='/v/:videoId' youtubeService={youtubeService} onProgress={this.handleProgress} />
-                    <Playlist path='/baby-legs'  youtubeService={youtubeService} onProgress={this.handleProgress} playlistId='PLNu47mcqeyiATtjW5pIRWlpXBu4pUezdP' />
                     <Playlist default youtubeService={youtubeService} onProgress={this.handleProgress} playlistId={defaultPlaylistId} />
                 </Router>
             </Shell>
