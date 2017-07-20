@@ -112,7 +112,7 @@ export default ({ production, coverage, outputPath, appConfig } = {}) => {
     return {
         context: path.resolve(__dirname, 'src'),
 
-        entry: '.',
+        entry: './client',
 
         module: {
             rules,

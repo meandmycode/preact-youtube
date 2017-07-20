@@ -98,14 +98,6 @@ app.get('/v/:videoId', wrap(async (req, res) => {
 
 }));
 
-app.get('/baby-legs', wrap(async (req, res) => {
-
-    const playlist = await getPlaylist('PLNu47mcqeyiATtjW5pIRWlpXBu4pUezdP');
-
-    view(res, playlist);
-
-}));
-
 app.get('/', wrap(async (req, res) => {
 
     const playlist = await getPlaylist('PLSi28iDfECJPJYFA4wjlF5KUucFvc0qbQ');
