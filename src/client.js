@@ -13,6 +13,8 @@ import Shell from './components/shell';
 import Playlist from './containers/playlist';
 import Video from './containers/video';
 
+import './styles/page.css';
+
 const youtubeService = new CachingYoutubeService(new XhrHttpGetter(), YOUTUBE_API_KEY); // eslint-disable-line no-undef
 const defaultPlaylistId = 'LLKtLy-jPPl11MLGLgkRwQGQ';
 
