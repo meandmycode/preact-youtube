@@ -3,7 +3,7 @@ This is an ultra rare youtube app, buy high, sell low.
 
 ## Demo
 
-**[You can try the web application out here](https://swankytube.herokuapp.com/baby-legs)**
+**[You can try the web application out here](https://swankytube.herokuapp.com)**
 
 ## Technology stack
 
